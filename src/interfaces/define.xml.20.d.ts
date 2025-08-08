@@ -1,23 +1,20 @@
 // Define-XML 2.0 interfaces (attributes use lowerCamelCase comparing to the XML specification)
 // See also: main.d.ts for shared interfaces
 
-export type ItemGroupDefClass =
-    | "SPECIAL PURPOSE"
-    | "FINDINGS"
-    | "EVENTS"
-    | "INTERVENTIONS"
-    | "TRIAL DESIGN"
-    | "RELATIONSHIP"
-    | "SUBJECT LEVEL ANALYSIS DATASET"
-    | "BASIC DATA STRUCTURE"
-    | "ADAM OTHER";
-export type ItemGroupDefPurpose = "Tabulation" | "Analysis";
-export type PdfPageRefType = "PhysicalRef" | "NamedDestination";
+// Reexport core types
+export * from "interfaces/define.xml.core";
+
+import {
+    ItemDefDataType,
+    ItemGroupDefClassNames,
+    ItemGroupDefPurpose,
+    PdfPageRefType,
+    Comparator,
+    SoftHard,
+    CodeListType,
+} from "interfaces/define.xml.core";
+
 export type OriginType = "CRF" | "Derived" | "Assigned" | "Protocol" | "eDT" | "Predecessor";
-export type Comparator = "LT" | "LE" | "GT" | "GE" | "EQ" | "NE" | "IN" | "NOTIN";
-export type SoftHard = "Soft" | "Hard";
-export type CodeListType = "text" | "float" | "integer";
-export type ItemDefDataType = "text" | "float" | "integer" | "date" | "datetime";
 
 export interface Alias {
     context: string;
@@ -196,7 +193,7 @@ export interface ItemGroupDef {
     domain?: string; // Required for SDTM and SEND
     sasDatasetName?: string; // Required for regulatory submissions
     structure?: string; // Required for regulatory submissions
-    class?: ItemGroupDefClass; // Required for regulatory submissions
+    class?: ItemGroupDefClassNames; // Required for regulatory submissions
     archiveLocationId?: string; // Required for regulatory submissions
     isReferenceData?: "Yes" | "No";
     commentOid?: string;
