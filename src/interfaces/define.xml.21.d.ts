@@ -1,6 +1,6 @@
 // Define-XML 2.1 interfaces (attributes use lowerCamelCase comparing to the XML specification)
-// See also: main.d.ts for shared interfaces
 
+// Reexport core types
 export * from "interfaces/define.xml.core";
 
 import {
@@ -12,27 +12,10 @@ import {
     Comparator,
     SoftHard,
     CodeListType,
+    StandardName,
+    StandardType,
+    StandardStatus,
 } from "interfaces/define.xml.core";
-
-export type StandardName =
-    | "ADaM-OCCDSIG"
-    | "ADaMIG"
-    | "ADaMIG-MD"
-    | "ADaMIG-NCA"
-    | "ADaMIG-popPK"
-    | "BIMO"
-    | "CDISC/NCI"
-    | "SDTMIG"
-    | "SDTMIG-AP"
-    | "SDTMIG-MD"
-    | "SENDIG"
-    | "SENDIG-AR"
-    | "SENDIG-DART"
-    | "SENDIG-GENETOX";
-
-export type StandardType = "CT" | "IG";
-
-export type StandardStatus = "FINAL" | "DRAFT" | "PROVISIONAL" | string;
 
 export type OriginType = "Assigned" | "Collected" | "Derived" | "Not Available" | "Other" | "Predecessor" | "Protocol";
 export type OriginSource = "Investigator" | "Sponsor" | "Subject" | "Vendor";
@@ -68,7 +51,7 @@ export interface PdfPageRef {
 
 export interface Origin {
     type: OriginType;
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     documentRefs?: DocumentRef[];
     source?: string;
 }
@@ -96,7 +79,7 @@ export interface CodeList {
     dataType: CodeListType;
     standardOid?: string;
     isNonStandard?: "Yes";
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     alias?: Alias[];
     commentOid?: string;
     sasFormatName?: string;
@@ -132,7 +115,7 @@ export interface CodeListItem {
 
 export interface CommentDef {
     oid: string;
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     documentRefs?: DocumentRef[];
 }
 
@@ -145,7 +128,7 @@ export interface MethodDef {
     oid: string;
     name: string;
     type: "Computation" | "Imputation";
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     documentRefs?: DocumentRef[];
     formalExpressions?: FormalExpression[];
 }
@@ -192,7 +175,7 @@ export interface ValueListDef {
     oid: string;
     itemRefs: Record<string, ItemRef>;
     itemRefsOrder: string[];
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
 }
 
 export interface GlobalVariables {
@@ -209,7 +192,7 @@ export interface Study {
 
 export interface Odm {
     xmlns: "http://www.cdisc.org/ns/odm/v1.3";
-    xmlns_def: "http://www.cdisc.org/ns/def/v2.0";
+    xmlns_def: "http://www.cdisc.org/ns/def/v2.1";
     xmlns_xlink?: "http://www.w3.org/1999/xlink"; // Conditional
     xmlns_xsi?: "http://www.w3.org/2001/XMLSchema-instance"; // Conditional
     xsi_schemaLocation?: string; // Optional
@@ -217,21 +200,22 @@ export interface Odm {
     fileType: "Snapshot";
     fileOid: string;
     creationDateTime: string; // ISO8601 datetime
+    context: string;
+    study: Study;
     asOfDateTime?: string; // ISO8601 datetime
     originator?: string;
     sourceSystem?: string;
     sourceSystemVersion?: string;
-    study: Study;
 }
 
-export interface SubClass {
+export interface ItemGroupDefSubclass {
     name: ItemGroupDefSubclassNames;
     parentClassName: ItemGroupDefClassNames | ItemGroupDefSubclassNames;
 }
 
 export interface ItemGroupDefClass {
     name: ItemGroupDefClassNames;
-    subClasses: SubClass[];
+    subClasses: ItemGroupDefSubclass[];
 }
 
 export interface ItemGroupDef {
@@ -269,6 +253,7 @@ export interface ItemDef {
     codeListRef?: string;
     origin?: Origin;
     valueListRef?: string;
+    alias?: Alias[];
 }
 
 export interface ItemRef {

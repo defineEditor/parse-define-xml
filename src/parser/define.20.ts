@@ -121,7 +121,7 @@ const parseOrigin = (originRaw: any): Origin => {
     };
 
     if (originRaw["description"]) {
-        result.descriptions = originRaw["description"].map(parseTranslatedText);
+        result.description = originRaw["description"].map(parseTranslatedText);
     }
     if (originRaw["documentRef"]) {
         result.documentRefs = parseDocumentRefs(originRaw["documentRef"]);
@@ -268,7 +268,7 @@ const parseCommentDefs = (
             oid: commentRaw["$"]["oid"],
         };
         if (commentRaw["description"]) {
-            comment.descriptions = commentRaw["description"].map(parseTranslatedText);
+            comment.description = commentRaw["description"].map(parseTranslatedText);
         }
         if (commentRaw["documentRef"]) {
             comment.documentRefs = parseDocumentRefs(commentRaw["documentRef"]);
@@ -298,7 +298,7 @@ const parseMethodDefs = (methodsRaw: any[]): { methodDefs: Record<string, Method
             type: methodRaw["$"]["type"] as "Computation" | "Imputation",
         };
         if (methodRaw["description"]) {
-            method.descriptions = methodRaw["description"].map(parseTranslatedText);
+            method.description = methodRaw["description"].map(parseTranslatedText);
         }
         if (methodRaw["documentRef"]) {
             method.documentRefs = parseDocumentRefs(methodRaw["documentRef"]);

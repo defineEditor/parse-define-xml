@@ -1,5 +1,4 @@
 // Define-XML 2.0 interfaces (attributes use lowerCamelCase comparing to the XML specification)
-// See also: main.d.ts for shared interfaces
 
 // Reexport core types
 export * from "interfaces/define.xml.core";
@@ -46,7 +45,7 @@ export interface PdfPageRef {
 
 export interface Origin {
     type: OriginType;
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     documentRefs?: DocumentRef[];
 }
 
@@ -105,7 +104,7 @@ export interface CodeListItem {
 
 export interface CommentDef {
     oid: string;
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     documentRefs?: DocumentRef[];
 }
 
@@ -118,7 +117,7 @@ export interface MethodDef {
     oid: string;
     name: string;
     type: "Computation" | "Imputation";
-    descriptions?: TranslatedText[];
+    description?: TranslatedText[];
     documentRefs?: DocumentRef[];
     formalExpressions?: FormalExpression[];
 }

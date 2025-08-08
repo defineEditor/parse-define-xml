@@ -1,5 +1,4 @@
-// Define-XML Core interfaces for version 2.0 and 2.1 (attributes use lowerCamelCase comparing to the XML specification)
-
+// Define-XML Core definitions for version 2.0 and 2.1 (attributes use lowerCamelCase comparing to the XML specification)
 export type ItemGroupDefClassNames =
     | "ADAM OTHER"
     | "BASIC DATA STRUCTURE"
@@ -17,9 +16,6 @@ export type ItemGroupDefClassNames =
     | "STUDY REFERENCE"
     | "SUBJECT LEVEL ANALYSIS DATASET"
     | "TRIAL DESIGN";
-/*
-NON-COMPARTMENTAL ANALYSIS
-*/
 export type ItemGroupDefSubclassNames =
     | "NON-COMPARTMENTAL ANALYSIS"
     | "POPULATION PHARMACOKINETIC ANALYSIS"
@@ -32,3 +28,20 @@ export type Comparator = "LT" | "LE" | "GT" | "GE" | "EQ" | "NE" | "IN" | "NOTIN
 export type SoftHard = "Soft" | "Hard";
 export type CodeListType = "text" | "float" | "integer";
 export type ItemDefDataType = "text" | "float" | "integer" | "date" | "datetime";
+export type StandardName =
+    | "ADaM-OCCDSIG"
+    | "ADaMIG"
+    | "ADaMIG-MD"
+    | "ADaMIG-NCA"
+    | "ADaMIG-popPK"
+    | "BIMO"
+    | "CDISC/NCI"
+    | "SDTMIG"
+    | "SDTMIG-AP"
+    | "SDTMIG-MD"
+    | "SENDIG"
+    | "SENDIG-AR"
+    | "SENDIG-DART"
+    | "SENDIG-GENETOX";
+export type StandardType = "CT" | "IG";
+export type StandardStatus = "FINAL" | "DRAFT" | "PROVISIONAL" | string;
