@@ -10,7 +10,7 @@
     "pretty": true,
     "sourceMap": true,
     "baseUrl": "./src",
-    "rootDir": "./src",
+    "rootDir": ".",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -23,5 +23,6 @@
     "resolveJsonModule": true,
     "allowJs": false,
     "outDir": "build",
-  }
+  },
+  "include": ["src", "test"]
 }

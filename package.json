@@ -1,9 +1,38 @@
 {
-  "devDependencies": {
-    "@eslint/js": "^9.32.0",
-    "eslint": "^9.32.0",
-    "eslint-config-prettier": "^10.1.8",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.39.0"
-  }
+    "jest": {
+        "moduleDirectories": [
+            "node_modules",
+            "src"
+        ],
+        "moduleFileExtensions": [
+            "js",
+            "ts",
+            "json"
+        ],
+        "moduleNameMapper": {
+            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
+            "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+        },
+        "transform": {
+            "\\.(ts|tsx)$": "ts-jest"
+        }
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.32.0",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-import": "^2.32.0",
+        "typescript": "^5.9.2",
+        "typescript-eslint": "^8.39.0",
+        "@types/jest": "^30.0.0",
+        "@types/xml2js": "^0.4.14",
+        "jest": "^30.0.5",
+        "ts-jest": "^29.4.1"
+    },
+    "scripts": {
+        "test": "jest"
+    },
+    "dependencies": {
+        "xml2js": "^0.6.2"
+    }
 }
