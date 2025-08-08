@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`Define-XML Parser ADaM Snapshots should match ADQSADAS.AVAL itemDef snapshot 1`] = `
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match ADQSADAS.AVAL itemDef snapshot 1`] = `
 {
   "dataType": "integer",
   "description": [
@@ -17,7 +17,7 @@ exports[`Define-XML Parser ADaM Snapshots should match ADQSADAS.AVAL itemDef sna
 }
 `;
 
-exports[`Define-XML Parser ADaM Snapshots should match ADQSADAS.TRTSDT itemDef snapshot 1`] = `
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match ADQSADAS.TRTSDT itemDef snapshot 1`] = `
 {
   "dataType": "integer",
   "description": [
@@ -31,7 +31,7 @@ exports[`Define-XML Parser ADaM Snapshots should match ADQSADAS.TRTSDT itemDef s
   "name": "TRTSDT",
   "oid": "IT.ADQSADAS.TRTSDT",
   "origin": {
-    "descriptions": [
+    "description": [
       {
         "value": "ADSL.TRTSDT",
         "xml_lang": "en",
@@ -43,7 +43,7 @@ exports[`Define-XML Parser ADaM Snapshots should match ADQSADAS.TRTSDT itemDef s
 }
 `;
 
-exports[`Define-XML Parser ADaM Snapshots should match ADSL itemGroupDef snapshot 1`] = `
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match ADSL itemGroupDef snapshot 1`] = `
 {
   "archiveLocationId": "LF.ADSL",
   "class": "SUBJECT LEVEL ANALYSIS DATASET",
@@ -391,7 +391,7 @@ exports[`Define-XML Parser ADaM Snapshots should match ADSL itemGroupDef snapsho
 }
 `;
 
-exports[`Define-XML Parser ADaM Snapshots should match leaf LF.ADRG snapshot 1`] = `
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match leaf LF.ADRG snapshot 1`] = `
 {
   "id": "LF.ADRG",
   "title": "Analysis Data Reviewer's Guide",
@@ -399,7 +399,7 @@ exports[`Define-XML Parser ADaM Snapshots should match leaf LF.ADRG snapshot 1`]
 }
 `;
 
-exports[`Define-XML Parser ADaM Snapshots should match valueList VL.ADQSADAS.AVAL snapshot 1`] = `
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match valueList VL.ADQSADAS.AVAL snapshot 1`] = `
 {
   "itemRefs": {
     "IT.ADQSADAS.AVAL.ACITM01-ACITM14": {
@@ -421,7 +421,7 @@ exports[`Define-XML Parser ADaM Snapshots should match valueList VL.ADQSADAS.AVA
 }
 `;
 
-exports[`Define-XML Parser ADaM Snapshots should match whereClause WC.ADQSADAS.AVAL.ACITM01-ACITM14 snapshot 1`] = `
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match whereClause WC.ADQSADAS.AVAL.ACITM01-ACITM14 snapshot 1`] = `
 {
   "oid": "WC.ADQSADAS.AVAL.ACITM01-ACITM14",
   "rangeChecks": [
@@ -450,7 +450,7 @@ exports[`Define-XML Parser ADaM Snapshots should match whereClause WC.ADQSADAS.A
 }
 `;
 
-exports[`Define-XML Parser SDTM Snapshots should match AE itemGroupDef snapshot 1`] = `
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match AE itemGroupDef snapshot 1`] = `
 {
   "archiveLocationId": "LF.AE",
   "class": "EVENTS",
@@ -596,7 +596,7 @@ exports[`Define-XML Parser SDTM Snapshots should match AE itemGroupDef snapshot 
 }
 `;
 
-exports[`Define-XML Parser SDTM Snapshots should match AESTDY itemDef snapshot 1`] = `
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match AESTDY itemDef snapshot 1`] = `
 {
   "dataType": "integer",
   "description": [
@@ -615,7 +615,7 @@ exports[`Define-XML Parser SDTM Snapshots should match AESTDY itemDef snapshot 1
 }
 `;
 
-exports[`Define-XML Parser SDTM Snapshots should match code list CL.EPOCH snapshot 1`] = `
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match code list CL.EPOCH snapshot 1`] = `
 {
   "alias": [
     {
@@ -644,9 +644,9 @@ exports[`Define-XML Parser SDTM Snapshots should match code list CL.EPOCH snapsh
 }
 `;
 
-exports[`Define-XML Parser SDTM Snapshots should match comment COM.DOMAIN.DM snapshot 1`] = `
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match comment COM.DOMAIN.DM snapshot 1`] = `
 {
-  "descriptions": [
+  "description": [
     {
       "value": "See Reviewer's Guide, Section 2.1 Demographics",
       "xml_lang": "en",
@@ -667,13 +667,11 @@ exports[`Define-XML Parser SDTM Snapshots should match comment COM.DOMAIN.DM sna
 }
 `;
 
-exports[`Define-XML Parser SDTM Snapshots should match external code list CL.AEDICT_F snapshot 1`] = `
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match external code list CL.AEDICT_F snapshot 1`] = `
 {
   "dataType": "text",
   "externalCodeList": {
     "dictionary": "MEDDRA",
-    "href": undefined,
-    "ref": undefined,
     "version": "8.0",
   },
   "name": "Adverse Event Dictionary",
@@ -681,9 +679,9 @@ exports[`Define-XML Parser SDTM Snapshots should match external code list CL.AED
 }
 `;
 
-exports[`Define-XML Parser SDTM Snapshots should match method MT.USUBJID snapshot 1`] = `
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match method MT.USUBJID snapshot 1`] = `
 {
-  "descriptions": [
+  "description": [
     {
       "value": "Concatenation of STUDYID and SUBJID",
       "xml_lang": "en",

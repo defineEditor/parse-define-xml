@@ -1,4 +1,4 @@
-// Define-XML 2.0 interfaces (attributes use lowerCamelCase comparing to the XML specification)
+// Define-XML 2.1 interfaces (attributes use lowerCamelCase comparing to the XML specification)
 
 // Reexport core types
 export * from "interfaces/define.xml.core";
@@ -6,14 +6,19 @@ export * from "interfaces/define.xml.core";
 import {
     ItemDefDataType,
     ItemGroupDefClassNames,
+    ItemGroupDefSubclassNames,
     ItemGroupDefPurpose,
     PdfPageRefType,
     Comparator,
     SoftHard,
     CodeListType,
+    StandardName,
+    StandardType,
+    StandardStatus,
 } from "interfaces/define.xml.core";
 
-export type OriginType = "CRF" | "Derived" | "Assigned" | "Protocol" | "eDT" | "Predecessor";
+export type OriginType = "Assigned" | "Collected" | "Derived" | "Not Available" | "Other" | "Predecessor" | "Protocol";
+export type OriginSource = "Investigator" | "Sponsor" | "Subject" | "Vendor";
 
 export interface Alias {
     context: string;
@@ -41,12 +46,14 @@ export interface PdfPageRef {
     pageRefs?: string;
     firstPage?: number;
     lastPage?: number;
+    title?: string;
 }
 
 export interface Origin {
     type: OriginType;
     description?: TranslatedText[];
     documentRefs?: DocumentRef[];
+    source?: string;
 }
 
 export interface WhereClauseRef {
@@ -70,8 +77,12 @@ export interface CodeList {
     oid: string;
     name: string;
     dataType: CodeListType;
-    sasFormatName?: string;
+    standardOid?: string;
+    isNonStandard?: "Yes";
+    description?: TranslatedText[];
     alias?: Alias[];
+    commentOid?: string;
+    sasFormatName?: string;
     // Children (one of the following groups is required)
     enumeratedItems?: EnumeratedItem[];
     codeListItems?: CodeListItem[];
@@ -122,13 +133,23 @@ export interface MethodDef {
     formalExpressions?: FormalExpression[];
 }
 
+export interface Standard {
+    oid: string;
+    name: StandardName;
+    type: StandardType;
+    version: string;
+    publishingSet?: string;
+    status?: StandardStatus;
+    commentOid?: string;
+}
+
 export interface MetaDataVersion {
     oid: string;
     name: string;
     description?: string;
     defineVersion: string;
-    standardName: string;
-    standardVersion: string;
+    standards: Record<string, Standard>;
+    standardsOrder: string[];
     itemGroupDefs: Record<string, ItemGroupDef>;
     itemGroupDefsOrder: string[];
     itemDefs: Record<string, ItemDef>;
@@ -147,12 +168,14 @@ export interface MetaDataVersion {
     commentDefsOrder?: string[];
     leafs?: Record<string, Leaf>;
     leafsOrder?: string[];
+    commentOid?: string;
 }
 
 export interface ValueListDef {
     oid: string;
     itemRefs: Record<string, ItemRef>;
     itemRefsOrder: string[];
+    description?: TranslatedText[];
 }
 
 export interface GlobalVariables {
@@ -169,7 +192,7 @@ export interface Study {
 
 export interface Odm {
     xmlns: "http://www.cdisc.org/ns/odm/v1.3";
-    xmlns_def: "http://www.cdisc.org/ns/def/v2.0";
+    xmlns_def: "http://www.cdisc.org/ns/def/v2.1";
     xmlns_xlink?: "http://www.w3.org/1999/xlink"; // Conditional
     xmlns_xsi?: "http://www.w3.org/2001/XMLSchema-instance"; // Conditional
     xsi_schemaLocation?: string; // Optional
@@ -177,11 +200,22 @@ export interface Odm {
     fileType: "Snapshot";
     fileOid: string;
     creationDateTime: string; // ISO8601 datetime
+    context: string;
+    study: Study;
     asOfDateTime?: string; // ISO8601 datetime
     originator?: string;
     sourceSystem?: string;
     sourceSystemVersion?: string;
-    study: Study;
+}
+
+export interface ItemGroupDefSubclass {
+    name: ItemGroupDefSubclassNames;
+    parentClassName: ItemGroupDefClassNames | ItemGroupDefSubclassNames;
+}
+
+export interface ItemGroupDefClass {
+    name: ItemGroupDefClassNames;
+    subClasses: ItemGroupDefSubclass[];
 }
 
 export interface ItemGroupDef {
@@ -192,9 +226,12 @@ export interface ItemGroupDef {
     domain?: string; // Required for SDTM and SEND
     sasDatasetName?: string; // Required for regulatory submissions
     structure?: string; // Required for regulatory submissions
-    class?: ItemGroupDefClassNames; // Required for regulatory submissions
+    standardOid?: string;
+    isNonStandard?: "Yes";
+    class?: ItemGroupDefClass; // Required for regulatory submissions
     archiveLocationId?: string; // Required for regulatory submissions
     isReferenceData?: "Yes" | "No";
+    hasNoData?: "Yes";
     commentOid?: string;
     description?: TranslatedText[];
     itemRefs: Record<string, ItemRef>;
@@ -216,6 +253,7 @@ export interface ItemDef {
     codeListRef?: string;
     origin?: Origin;
     valueListRef?: string;
+    alias?: Alias[];
 }
 
 export interface ItemRef {
@@ -227,4 +265,6 @@ export interface ItemRef {
     role?: string; // Optional for SDTM standard domains, conditional required for SDTM custom domains
     roleCodeListOid?: string;
     whereClauseRefs?: string[];
+    isNonStandard?: "Yes";
+    standardOid?: string;
 }

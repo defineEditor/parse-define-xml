@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import parseDefineXml from "parser/define";
+import parseDefineXml from "parser/define.20";
 import { MetaDataVersion } from "interfaces/define.xml.20";
 
 describe("Define-XML 2.0 Parser", () => {
