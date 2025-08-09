@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * Parse Define-XML 2.0 document to TypeScript interfaces
+ * Parse Define-XML 2.1 document to TypeScript interfaces
  */
 
 import * as xml2js from "xml2js";
@@ -38,7 +38,12 @@ import type {
     Leaf,
     TranslatedText,
     Alias,
-} from "interfaces/define.xml.20.d.ts";
+    Standard,
+    ItemGroupDefSubclassNames,
+    ItemGroupDefSubclass,
+    ItemGroupDefClass,
+    OriginSource,
+} from "interfaces/define.xml.21.d.ts";
 
 const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
     const text = translatedTextRaw.translatedText[0];
@@ -97,6 +102,9 @@ const parsePdfPageRefs = (pdfPageRefsRaw: any[]): PdfPageRef[] => {
         if (ref["$"]["lastPage"]) {
             result.lastPage = Number(ref["$"]["lastPage"]);
         }
+        if (ref["$"]["title"]) {
+            result.title = ref["$"]["title"];
+        }
 
         return result;
     });
@@ -116,19 +124,23 @@ const parseDocumentRefs = (documentRefsRaw: any[]): DocumentRef[] => {
     });
 };
 
-const parseOrigin = (originRaw: any): Origin => {
-    const result: Origin = {
-        type: originRaw["$"]["type"] as OriginType,
-    };
+const parseOrigin = (originRaw: any[]): Origin[] => {
+    return originRaw.map((item) => {
+        const result: Origin = {
+            type: item["$"]["type"] as OriginType,
+        };
 
-    if (originRaw["description"]) {
-        result.description = originRaw["description"].map(parseTranslatedText);
-    }
-    if (originRaw["documentRef"]) {
-        result.documentRefs = parseDocumentRefs(originRaw["documentRef"]);
-    }
-
-    return result;
+        if (item["$"]["source"]) {
+            result.source = item["$"]["source"] as OriginSource;
+        }
+        if (item["description"]) {
+            result.description = item["description"].map(parseTranslatedText);
+        }
+        if (item["documentRef"]) {
+            result.documentRefs = parseDocumentRefs(item["documentRef"]);
+        }
+        return result;
+    });
 };
 
 const parseCheckValues = (checkValuesRaw: any[]): string[] => {
@@ -180,10 +192,12 @@ const parseEnumeratedItems = (enumeratedItemsRaw: any[]): EnumeratedItem[] => {
             enumeratedItem.orderNumber = Number(item["$"]["orderNumber"]);
         }
         if (item["$"]["extendedValue"]) {
-            if (item["$"]["extendedValue"] !== "Yes") {
-                throw new Error(`Invalid value for EnumeratedItem.extendedValue: ${item["$"]["extendedValue"]}`);
-            } else {
+            if (item["$"]["extendedValue"] === "Yes") {
                 enumeratedItem.extendedValue = true;
+            } else {
+                throw new Error(
+                    `Invalid value for extendedValue. Expected "Yes", received ${item["$"]["extendedValue"]}`
+                );
             }
         }
         if (item["alias"]) {
@@ -207,10 +221,12 @@ const parseCodeListItems = (codeListItemsRaw: any[]): CodeListItem[] => {
             codeListItem.orderNumber = Number(item["$"]["orderNumber"]);
         }
         if (item["$"]["extendedValue"]) {
-            if (item["$"]["extendedValue"] !== "Yes") {
-                throw new Error(`Invalid value for EnumeratedItem.extendedValue: ${item["$"]["extendedValue"]}`);
-            } else {
+            if (item["$"]["extendedValue"] === "Yes") {
                 codeListItem.extendedValue = true;
+            } else {
+                throw new Error(
+                    `Invalid value for extendedValue. Expected "Yes", received ${item["$"]["extendedValue"]}`
+                );
             }
         }
         if (item["alias"]) {
@@ -259,6 +275,24 @@ const parseCodeLists = (codeListsRaw: any[]): { codeLists: Record<string, CodeLi
         }
         if (clRaw["externalCodeList"]) {
             codeList.externalCodeList = parseExternalCodeList(clRaw["externalCodeList"][0]);
+        }
+        if (clRaw["$"]["standardOid"]) {
+            codeList.standardOid = clRaw["$"]["standardOid"];
+        }
+        if (clRaw["$"]["isNonStandard"]) {
+            if (clRaw["$"]["isNonStandard"] === "Yes") {
+                codeList.isNonStandard = true;
+            } else {
+                throw new Error(
+                    `Invalid value for isNonStandard. Expected "Yes", received ${clRaw["$"]["isNonStandard"]}`
+                );
+            }
+        }
+        if (clRaw["$"]["commentOid"]) {
+            codeList.commentOid = clRaw["$"]["commentOid"];
+        }
+        if (clRaw["description"]) {
+            codeList.description = clRaw["description"].map(parseTranslatedText);
         }
         codeLists[codeList.oid] = codeList;
         codeListsOrder.push(codeList.oid);
@@ -322,14 +356,19 @@ const parseMethodDefs = (methodsRaw: any[]): { methodDefs: Record<string, Method
 };
 
 const parseItemRef = (itemRefRaw: any): ItemRef => {
-    const rawMandatory = itemRefRaw["$"]["mandatory"];
-    if (rawMandatory !== "Yes" && rawMandatory !== "No") {
-        throw new Error(`Invalid value for ItemRef.mandatory: ${rawMandatory}`);
+    let mandatory: boolean = false;
+    if (itemRefRaw["$"]["mandatory"] === "Yes" || itemRefRaw["$"]["mandatory"] === "No") {
+        mandatory = itemRefRaw["$"]["mandatory"] == "Yes" ? true : false;
+    } else {
+        throw new Error(
+            `Invalid value for mandatory. Expected "Yes" or "No", received ${itemRefRaw["$"]["mandatory"]}`
+        );
     }
     const itemRef: ItemRef = {
         itemOid: itemRefRaw["$"]["itemOid"],
-        mandatory: rawMandatory === "Yes",
+        mandatory,
     };
+
     if (itemRefRaw["$"]["methodOid"]) {
         itemRef.methodOid = itemRefRaw["$"]["methodOid"];
     }
@@ -347,6 +386,18 @@ const parseItemRef = (itemRefRaw: any): ItemRef => {
     }
     if (itemRefRaw["$"]["whereClauseRef"]) {
         itemRef.whereClauseRefs = itemRefRaw["whereClauseRef"].map((ref: any) => ref["$"]["whereClauseOid"]);
+    }
+    if (itemRefRaw["$"]["standardOid"]) {
+        itemRef.standardOid = itemRefRaw["$"]["standardOid"];
+    }
+    if (itemRefRaw["$"]["isNonStandard"]) {
+        if (itemRefRaw["$"]["isNonStandard"] === "Yes") {
+            itemRef.isNonStandard = true;
+        } else {
+            throw new Error(
+                `Invalid value for isNonStandard. Expected "Yes", received ${itemRefRaw["$"]["isNonStandard"]}`
+            );
+        }
     }
 
     return itemRef;
@@ -367,6 +418,9 @@ const parseValueLists = (
             itemRefs,
             itemRefsOrder,
         };
+        if (vlRaw["description"]) {
+            valueList.description = vlRaw["description"].map(parseTranslatedText);
+        }
         valueLists[valueList.oid] = valueList;
         valueListDefsOrder.push(valueList.oid);
     });
@@ -418,15 +472,47 @@ const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, ItemDef>;
             itemDef.codeListRef = itemDefRaw["codeListRef"][0]["$"]["codeListOid"];
         }
         if (itemDefRaw["origin"]) {
-            itemDef.origins = [parseOrigin(itemDefRaw["origin"][0])];
+            itemDef.origins = parseOrigin(itemDefRaw["origin"]);
         }
         if (itemDefRaw["valueListRef"]) {
             itemDef.valueListRef = itemDefRaw["valueListRef"][0]["$"]["valueListOid"];
+        }
+        if (itemDefRaw["alias"]) {
+            itemDef.alias = parseAliases(itemDefRaw["alias"]);
         }
         itemDefs[itemDef.oid] = itemDef;
         itemDefsOrder.push(itemDef.oid);
     });
     return { itemDefs, itemDefsOrder };
+};
+
+const parseClass = (classRaw: any): ItemGroupDefClass => {
+    if (!Array.isArray(classRaw) || !classRaw[0]) {
+        throw new Error("Expected class to be a non-empty array");
+    }
+
+    const result: ItemGroupDefClass = {
+        name: classRaw[0]["$"]["name"] as ItemGroupDefClassNames,
+    };
+
+    const subClasses: ItemGroupDefSubclass[] = [];
+
+    if (classRaw[0]["subClass"]) {
+        classRaw[0]["subClass"].forEach((subClassRaw: any) => {
+            const subClass: ItemGroupDefSubclass = {
+                name: subClassRaw["$"]["name"] as ItemGroupDefSubclassNames,
+            };
+            if (subClassRaw["$"]["parentClassName"]) {
+                subClass.parentClassName = subClassRaw["$"]["parentClassName"] as
+                    | ItemGroupDefClassNames
+                    | ItemGroupDefSubclassNames;
+            }
+            subClasses.push(subClass);
+        });
+        result.subClasses = subClasses;
+    }
+
+    return result;
 };
 
 const parseItemGroups = (
@@ -439,31 +525,63 @@ const parseItemGroups = (
         const { itemRefs, itemRefsOrder } = igRaw["itemRef"]
             ? parseItemRefs(igRaw["itemRef"])
             : { itemRefs: {}, itemRefsOrder: [] };
-        const rawRepeating = igRaw["$"]["repeating"];
-        if (rawRepeating !== "Yes" && rawRepeating !== "No") {
-            throw new Error(`Invalid value for ItemGroupDef.repeating: ${rawRepeating}`);
+        let repeating: boolean = false;
+        if (igRaw["$"]["repeating"] === "Yes" || igRaw["$"]["repeating"] === "No") {
+            repeating = igRaw["$"]["repeating"] == "Yes" ? true : false;
+        } else {
+            throw new Error(`Invalid value for repeating. Expected "Yes" or "No", received ${igRaw["$"]["repeating"]}`);
         }
         const itemGroup: ItemGroupDef = {
             oid: igRaw["$"]["oid"],
             name: igRaw["$"]["name"],
-            repeating: rawRepeating === "Yes",
+            repeating,
             purpose: igRaw["$"]["purpose"] as ItemGroupDefPurpose,
             sasDatasetName: igRaw["$"]["sASDatasetName"],
             structure: igRaw["$"]["structure"],
-            class: igRaw["$"]["class"] as ItemGroupDefClassNames,
             archiveLocationId: igRaw["$"]["archiveLocationId"],
             itemRefs,
             itemRefsOrder,
         };
+        if (igRaw["$"]["standardOid"]) {
+            itemGroup.standardOid = igRaw["$"]["standardOid"];
+        }
+        if (igRaw["$"]["isNonStandard"]) {
+            if (igRaw["$"]["isNonStandard"] === "Yes") {
+                itemGroup.isNonStandard = true;
+            } else {
+                throw new Error(
+                    `Invalid value for isNonStandard. Expected "Yes", received ${igRaw["$"]["isNonStandard"]}`
+                );
+            }
+        }
+        if (igRaw["$"]["hasNoData"]) {
+            if (igRaw["$"]["hasNoData"] === "Yes") {
+                itemGroup.hasNoData = true;
+            } else {
+                throw new Error(`Invalid value for hasNoData. Expected "Yes", received ${igRaw["$"]["hasNoData"]}`);
+            }
+        }
+        if (igRaw["class"]) {
+            itemGroup.class = igRaw["class"] ? parseClass(igRaw["class"]) : undefined;
+        }
         if (igRaw["$"]["domain"]) {
             itemGroup.domain = igRaw["$"]["domain"];
         }
         if (igRaw["$"]["isReferenceData"]) {
-            const rawIsReferenceData = igRaw["$"]["isReferenceData"];
-            if (rawIsReferenceData !== "Yes" && rawIsReferenceData !== "No") {
-                throw new Error(`Invalid value for ItemGroupDef.isReferenceData: ${rawIsReferenceData}`);
+            /* Convert using approach similar to this:
+            if (item["$"]["extendedValue"] === "Yes") {
+                enumeratedItem.extendedValue = true;
+            } else {
+                throw new Error(`Invalid value for extendedValue. Expected "Yes", received ${item["$"]["extendedValue"]}`);
             }
-            itemGroup.isReferenceData = rawIsReferenceData === "Yes";
+            */
+            if (igRaw["$"]["isReferenceData"] === "Yes" || igRaw["$"]["isReferenceData"] === "No") {
+                itemGroup.isReferenceData = igRaw["$"]["isReferenceData"] === "Yes" ? true : false;
+            } else {
+                throw new Error(
+                    `Invalid value for isReferenceData. Expected "Yes" or "No", received ${igRaw["isReferenceData"]}`
+                );
+            }
         }
         if (igRaw["$"]["commentOid"]) {
             itemGroup.commentOid = igRaw["$"]["commentOid"];
@@ -484,23 +602,53 @@ const parseItemGroups = (
     return { itemGroupDefs, itemGroupDefsOrder };
 };
 
+const parseStandards = (standardsRaw: any[]): { standards: Record<string, Standard>; standardsOrder: string[] } => {
+    const standards: Record<string, Standard> = {};
+    const standardsOrder: string[] = [];
+    if (!standardsRaw) return { standards, standardsOrder };
+    standardsRaw[0]?.standard.forEach((stdRaw: Record<string, any>) => {
+        const standard: Standard = {
+            oid: stdRaw["$"]["oid"],
+            name: stdRaw["$"]["name"],
+            type: stdRaw["$"]["type"],
+            version: stdRaw["$"]["version"],
+        };
+        if (stdRaw["$"]["publishingSet"]) {
+            standard.publishingSet = stdRaw["$"]["publishingSet"];
+        }
+        if (stdRaw["$"]["status"]) {
+            standard.status = stdRaw["$"]["status"];
+        }
+        if (stdRaw["$"]["commentOid"]) {
+            standard.commentOid = stdRaw["$"]["commentOid"];
+        }
+        standards[standard.oid] = standard;
+        standardsOrder.push(standard.oid);
+    });
+    return { standards, standardsOrder };
+};
+
 const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
     const { itemGroupDefs, itemGroupDefsOrder } = parseItemGroups(metadataRaw["itemGroupDef"]);
     const { itemDefs, itemDefsOrder } = parseItemDefs(metadataRaw["itemDef"]);
+    const { standards, standardsOrder } = parseStandards(metadataRaw["standards"]);
 
     const result: MetaDataVersion = {
         oid: metadataRaw["$"]["oid"],
         name: metadataRaw["$"]["name"],
         description: metadataRaw["$"]["description"],
         defineVersion: metadataRaw["$"]["defineVersion"],
-        standardName: metadataRaw["$"]["standardName"],
-        standardVersion: metadataRaw["$"]["standardVersion"],
+        standards,
+        standardsOrder,
         itemGroupDefs,
         itemGroupDefsOrder,
         itemDefs,
         itemDefsOrder,
     };
 
+    if (metadataRaw["$"]["commentOid"]) {
+        result.commentOid = metadataRaw["$"]["commentOid"];
+    }
     if (metadataRaw["annotatedCrf"]) {
         const annotatedCrf = metadataRaw["annotatedCrf"] ? parseDocumentRefs(metadataRaw["annotatedCrf"]) : undefined;
         result.annotatedCrf = annotatedCrf;
@@ -560,13 +708,14 @@ const parseStudy = (studyRaw: any): Study => ({
 const parseOdm = (odmRaw: any): Odm => {
     const result: Odm = {
         xmlns: odmRaw["$"]["xmlns"] as "http://www.cdisc.org/ns/odm/v1.3",
-        xmlns_def: odmRaw["$"]["xmlns:def"] as "http://www.cdisc.org/ns/def/v2.0",
+        xmlns_def: odmRaw["$"]["xmlns:def"] as "http://www.cdisc.org/ns/def/v2.1",
         xsi_schemaLocation: odmRaw["$"]["xsi:schemaLocation"],
         odmVersion: "1.3.2",
         fileType: "Snapshot",
         fileOid: odmRaw["$"]["fileOid"],
         creationDateTime: odmRaw["$"]["creationDateTime"],
         study: parseStudy(odmRaw["study"][0]),
+        context: odmRaw["$"]["context"],
     };
     if (odmRaw["$"]["asOfDateTime"]) {
         result.asOfDateTime = odmRaw["$"]["asOfDateTime"];
