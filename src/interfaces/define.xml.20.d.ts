@@ -89,7 +89,7 @@ export interface EnumeratedItem {
     codedValue: string;
     rank?: number;
     orderNumber?: number;
-    extendedValue?: "Yes";
+    extendedValue?: true;
     alias?: Alias[];
 }
 
@@ -97,7 +97,7 @@ export interface CodeListItem {
     codedValue: string;
     rank?: number;
     orderNumber?: number;
-    extendedValue?: "Yes";
+    extendedValue?: true;
     decode: TranslatedText[];
     alias?: Alias[];
 }
@@ -187,14 +187,14 @@ export interface Odm {
 export interface ItemGroupDef {
     oid: string;
     name: string;
-    repeating: "Yes" | "No";
+    repeating: boolean;
     purpose: ItemGroupDefPurpose;
     domain?: string; // Required for SDTM and SEND
     sasDatasetName?: string; // Required for regulatory submissions
     structure?: string; // Required for regulatory submissions
     class?: ItemGroupDefClassNames; // Required for regulatory submissions
     archiveLocationId?: string; // Required for regulatory submissions
-    isReferenceData?: "Yes" | "No";
+    isReferenceData?: boolean;
     commentOid?: string;
     description?: TranslatedText[];
     itemRefs: Record<string, ItemRef>;
@@ -214,13 +214,13 @@ export interface ItemDef {
     commentOid?: string;
     description?: TranslatedText[];
     codeListRef?: string;
-    origin?: Origin;
+    origins?: Origin[];
     valueListRef?: string;
 }
 
 export interface ItemRef {
     itemOid: string;
-    mandatory: "Yes" | "No";
+    mandatory: boolean;
     orderNumber?: number;
     keySequence?: number; // Required for regulatory submissions
     methodOid?: string; // Conditional: required when referenced ItemDef has Origin@Type="Derived"

@@ -53,7 +53,7 @@ export interface Origin {
     type: OriginType;
     description?: TranslatedText[];
     documentRefs?: DocumentRef[];
-    source?: string;
+    source?: OriginSource;
 }
 
 export interface WhereClauseRef {
@@ -78,7 +78,7 @@ export interface CodeList {
     name: string;
     dataType: CodeListType;
     standardOid?: string;
-    isNonStandard?: "Yes";
+    isNonStandard?: true;
     description?: TranslatedText[];
     alias?: Alias[];
     commentOid?: string;
@@ -100,7 +100,7 @@ export interface EnumeratedItem {
     codedValue: string;
     rank?: number;
     orderNumber?: number;
-    extendedValue?: "Yes";
+    extendedValue?: true;
     alias?: Alias[];
 }
 
@@ -108,7 +108,7 @@ export interface CodeListItem {
     codedValue: string;
     rank?: number;
     orderNumber?: number;
-    extendedValue?: "Yes";
+    extendedValue?: true;
     decode: TranslatedText[];
     alias?: Alias[];
 }
@@ -210,28 +210,28 @@ export interface Odm {
 
 export interface ItemGroupDefSubclass {
     name: ItemGroupDefSubclassNames;
-    parentClassName: ItemGroupDefClassNames | ItemGroupDefSubclassNames;
+    parentClassName?: ItemGroupDefClassNames | ItemGroupDefSubclassNames;
 }
 
 export interface ItemGroupDefClass {
     name: ItemGroupDefClassNames;
-    subClasses: ItemGroupDefSubclass[];
+    subClasses?: ItemGroupDefSubclass[];
 }
 
 export interface ItemGroupDef {
     oid: string;
     name: string;
-    repeating: "Yes" | "No";
+    repeating: boolean;
     purpose: ItemGroupDefPurpose;
     domain?: string; // Required for SDTM and SEND
     sasDatasetName?: string; // Required for regulatory submissions
     structure?: string; // Required for regulatory submissions
     standardOid?: string;
-    isNonStandard?: "Yes";
+    isNonStandard?: true;
     class?: ItemGroupDefClass; // Required for regulatory submissions
     archiveLocationId?: string; // Required for regulatory submissions
-    isReferenceData?: "Yes" | "No";
-    hasNoData?: "Yes";
+    isReferenceData?: boolean;
+    hasNoData?: true;
     commentOid?: string;
     description?: TranslatedText[];
     itemRefs: Record<string, ItemRef>;
@@ -251,20 +251,20 @@ export interface ItemDef {
     commentOid?: string;
     description?: TranslatedText[];
     codeListRef?: string;
-    origin?: Origin;
+    origins?: Origin[];
     valueListRef?: string;
     alias?: Alias[];
 }
 
 export interface ItemRef {
     itemOid: string;
-    mandatory: "Yes" | "No";
+    mandatory: boolean;
     orderNumber?: number;
     keySequence?: number; // Required for regulatory submissions
     methodOid?: string; // Conditional: required when referenced ItemDef has Origin@Type="Derived"
     role?: string; // Optional for SDTM standard domains, conditional required for SDTM custom domains
     roleCodeListOid?: string;
     whereClauseRefs?: string[];
-    isNonStandard?: "Yes";
+    isNonStandard?: true;
     standardOid?: string;
 }

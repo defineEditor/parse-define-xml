@@ -1,0 +1,762 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match ADQSADAS.AVAL itemDef snapshot 1`] = `
+{
+  "dataType": "integer",
+  "description": [
+    {
+      "value": "Analysis Value",
+      "xml_lang": "en",
+    },
+  ],
+  "length": 3,
+  "name": "AVAL",
+  "oid": "IT.ADQSADAS.AVAL",
+  "sasFieldName": "AVAL",
+  "valueListRef": "VL.ADQSADAS.AVAL",
+}
+`;
+
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match ADQSADAS.TRTSDT itemDef snapshot 1`] = `
+{
+  "dataType": "integer",
+  "description": [
+    {
+      "value": "Date of First Exposure to Treatment",
+      "xml_lang": "en",
+    },
+  ],
+  "displayFormat": "date9.",
+  "length": 5,
+  "name": "TRTSDT",
+  "oid": "IT.ADQSADAS.TRTSDT",
+  "origins": [
+    {
+      "description": [
+        {
+          "value": "ADSL.TRTSDT",
+          "xml_lang": "en",
+        },
+      ],
+      "type": "Predecessor",
+    },
+  ],
+  "sasFieldName": "TRTSDT",
+}
+`;
+
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match ADSL itemGroupDef snapshot 1`] = `
+{
+  "archiveLocationId": "LF.ADAE",
+  "class": {
+    "name": "OCCURRENCE DATA STRUCTURE",
+    "subClasses": [
+      {
+        "name": "ADVERSE EVENT",
+      },
+    ],
+  },
+  "commentOid": "COM.ADAE",
+  "description": [
+    {
+      "value": "Adverse Events Analysis Dataset",
+      "xml_lang": "en",
+    },
+  ],
+  "isReferenceData": false,
+  "itemRefs": {
+    "IT.ADAE.ADURN": {
+      "itemOid": "IT.ADAE.ADURN",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.ADURN",
+      "orderNumber": 20,
+    },
+    "IT.ADAE.ADURU": {
+      "itemOid": "IT.ADAE.ADURU",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.ADURU",
+      "orderNumber": 21,
+    },
+    "IT.ADAE.AEACN": {
+      "itemOid": "IT.ADAE.AEACN",
+      "mandatory": false,
+      "orderNumber": 44,
+    },
+    "IT.ADAE.AEBODSYS": {
+      "itemOid": "IT.ADAE.AEBODSYS",
+      "mandatory": false,
+      "orderNumber": 31,
+    },
+    "IT.ADAE.AEDECOD": {
+      "itemOid": "IT.ADAE.AEDECOD",
+      "mandatory": false,
+      "orderNumber": 25,
+    },
+    "IT.ADAE.AEHLGT": {
+      "itemOid": "IT.ADAE.AEHLGT",
+      "mandatory": false,
+      "orderNumber": 29,
+    },
+    "IT.ADAE.AEHLGTCD": {
+      "itemOid": "IT.ADAE.AEHLGTCD",
+      "mandatory": false,
+      "orderNumber": 30,
+    },
+    "IT.ADAE.AEHLT": {
+      "itemOid": "IT.ADAE.AEHLT",
+      "mandatory": false,
+      "orderNumber": 27,
+    },
+    "IT.ADAE.AEHLTCD": {
+      "itemOid": "IT.ADAE.AEHLTCD",
+      "mandatory": false,
+      "orderNumber": 28,
+    },
+    "IT.ADAE.AELLT": {
+      "itemOid": "IT.ADAE.AELLT",
+      "mandatory": false,
+      "orderNumber": 23,
+    },
+    "IT.ADAE.AELLTCD": {
+      "itemOid": "IT.ADAE.AELLTCD",
+      "mandatory": false,
+      "orderNumber": 24,
+    },
+    "IT.ADAE.AENDT": {
+      "itemOid": "IT.ADAE.AENDT",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AENDT",
+      "orderNumber": 18,
+    },
+    "IT.ADAE.AENDY": {
+      "itemOid": "IT.ADAE.AENDY",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AENDY",
+      "orderNumber": 19,
+    },
+    "IT.ADAE.AEOUT": {
+      "itemOid": "IT.ADAE.AEOUT",
+      "mandatory": false,
+      "orderNumber": 45,
+    },
+    "IT.ADAE.AEPTCD": {
+      "itemOid": "IT.ADAE.AEPTCD",
+      "mandatory": false,
+      "orderNumber": 26,
+    },
+    "IT.ADAE.AEREL": {
+      "itemOid": "IT.ADAE.AEREL",
+      "mandatory": false,
+      "orderNumber": 43,
+    },
+    "IT.ADAE.AESCAN": {
+      "itemOid": "IT.ADAE.AESCAN",
+      "mandatory": false,
+      "orderNumber": 36,
+    },
+    "IT.ADAE.AESCONG": {
+      "itemOid": "IT.ADAE.AESCONG",
+      "mandatory": false,
+      "orderNumber": 37,
+    },
+    "IT.ADAE.AESDISAB": {
+      "itemOid": "IT.ADAE.AESDISAB",
+      "mandatory": false,
+      "orderNumber": 38,
+    },
+    "IT.ADAE.AESDTH": {
+      "itemOid": "IT.ADAE.AESDTH",
+      "mandatory": false,
+      "orderNumber": 39,
+    },
+    "IT.ADAE.AESEQ": {
+      "itemOid": "IT.ADAE.AESEQ",
+      "keySequence": 5,
+      "mandatory": false,
+      "orderNumber": 46,
+    },
+    "IT.ADAE.AESER": {
+      "itemOid": "IT.ADAE.AESER",
+      "mandatory": false,
+      "orderNumber": 35,
+    },
+    "IT.ADAE.AESEV": {
+      "itemOid": "IT.ADAE.AESEV",
+      "mandatory": false,
+      "orderNumber": 34,
+    },
+    "IT.ADAE.AESHOSP": {
+      "itemOid": "IT.ADAE.AESHOSP",
+      "mandatory": false,
+      "orderNumber": 40,
+    },
+    "IT.ADAE.AESLIFE": {
+      "itemOid": "IT.ADAE.AESLIFE",
+      "mandatory": false,
+      "orderNumber": 41,
+    },
+    "IT.ADAE.AESOC": {
+      "itemOid": "IT.ADAE.AESOC",
+      "mandatory": false,
+      "orderNumber": 32,
+    },
+    "IT.ADAE.AESOCCD": {
+      "itemOid": "IT.ADAE.AESOCCD",
+      "mandatory": false,
+      "orderNumber": 33,
+    },
+    "IT.ADAE.AESOD": {
+      "itemOid": "IT.ADAE.AESOD",
+      "mandatory": false,
+      "orderNumber": 42,
+    },
+    "IT.ADAE.AETERM": {
+      "itemOid": "IT.ADAE.AETERM",
+      "keySequence": 3,
+      "mandatory": false,
+      "orderNumber": 22,
+    },
+    "IT.ADAE.AGE": {
+      "itemOid": "IT.ADAE.AGE",
+      "mandatory": false,
+      "orderNumber": 6,
+    },
+    "IT.ADAE.AGEGR1": {
+      "itemOid": "IT.ADAE.AGEGR1",
+      "mandatory": false,
+      "orderNumber": 7,
+    },
+    "IT.ADAE.AGEGR1N": {
+      "itemOid": "IT.ADAE.AGEGR1N",
+      "mandatory": false,
+      "orderNumber": 8,
+    },
+    "IT.ADAE.AOCC01FL": {
+      "itemOid": "IT.ADAE.AOCC01FL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCC01FL",
+      "orderNumber": 55,
+    },
+    "IT.ADAE.AOCC02FL": {
+      "itemOid": "IT.ADAE.AOCC02FL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCC02FL",
+      "orderNumber": 51,
+    },
+    "IT.ADAE.AOCC03FL": {
+      "itemOid": "IT.ADAE.AOCC03FL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCC03FL",
+      "orderNumber": 52,
+    },
+    "IT.ADAE.AOCC04FL": {
+      "itemOid": "IT.ADAE.AOCC04FL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCC04FL",
+      "orderNumber": 53,
+    },
+    "IT.ADAE.AOCCFL": {
+      "itemOid": "IT.ADAE.AOCCFL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCCFL",
+      "orderNumber": 48,
+    },
+    "IT.ADAE.AOCCPFL": {
+      "itemOid": "IT.ADAE.AOCCPFL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCCPFL",
+      "orderNumber": 50,
+    },
+    "IT.ADAE.AOCCSFL": {
+      "itemOid": "IT.ADAE.AOCCSFL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.AOCCSFL",
+      "orderNumber": 49,
+    },
+    "IT.ADAE.ASTDT": {
+      "itemOid": "IT.ADAE.ASTDT",
+      "keySequence": 4,
+      "mandatory": false,
+      "methodOid": "MT.ADAE.ASTDT",
+      "orderNumber": 15,
+    },
+    "IT.ADAE.ASTDTF": {
+      "itemOid": "IT.ADAE.ASTDTF",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.ASTDTF",
+      "orderNumber": 16,
+    },
+    "IT.ADAE.ASTDY": {
+      "itemOid": "IT.ADAE.ASTDY",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.ASTDY",
+      "orderNumber": 17,
+    },
+    "IT.ADAE.CQ01NAM": {
+      "itemOid": "IT.ADAE.CQ01NAM",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.CQ01NAM",
+      "orderNumber": 54,
+    },
+    "IT.ADAE.RACE": {
+      "itemOid": "IT.ADAE.RACE",
+      "mandatory": false,
+      "orderNumber": 9,
+    },
+    "IT.ADAE.RACEN": {
+      "itemOid": "IT.ADAE.RACEN",
+      "mandatory": false,
+      "orderNumber": 10,
+    },
+    "IT.ADAE.SAFFL": {
+      "itemOid": "IT.ADAE.SAFFL",
+      "mandatory": false,
+      "orderNumber": 12,
+    },
+    "IT.ADAE.SEX": {
+      "itemOid": "IT.ADAE.SEX",
+      "mandatory": false,
+      "orderNumber": 11,
+    },
+    "IT.ADAE.SITEID": {
+      "itemOid": "IT.ADAE.SITEID",
+      "mandatory": false,
+      "orderNumber": 2,
+    },
+    "IT.ADAE.STUDYID": {
+      "itemOid": "IT.ADAE.STUDYID",
+      "keySequence": 1,
+      "mandatory": false,
+      "orderNumber": 1,
+    },
+    "IT.ADAE.TRTA": {
+      "itemOid": "IT.ADAE.TRTA",
+      "mandatory": false,
+      "orderNumber": 4,
+    },
+    "IT.ADAE.TRTAN": {
+      "itemOid": "IT.ADAE.TRTAN",
+      "mandatory": false,
+      "orderNumber": 5,
+    },
+    "IT.ADAE.TRTEDT": {
+      "itemOid": "IT.ADAE.TRTEDT",
+      "mandatory": false,
+      "orderNumber": 14,
+    },
+    "IT.ADAE.TRTEMFL": {
+      "itemOid": "IT.ADAE.TRTEMFL",
+      "mandatory": false,
+      "methodOid": "MT.ADAE.TRTEMFL",
+      "orderNumber": 47,
+    },
+    "IT.ADAE.TRTSDT": {
+      "itemOid": "IT.ADAE.TRTSDT",
+      "mandatory": false,
+      "orderNumber": 13,
+    },
+    "IT.ADAE.USUBJID": {
+      "itemOid": "IT.ADAE.USUBJID",
+      "keySequence": 2,
+      "mandatory": false,
+      "orderNumber": 3,
+    },
+  },
+  "itemRefsOrder": [
+    "IT.ADAE.STUDYID",
+    "IT.ADAE.SITEID",
+    "IT.ADAE.USUBJID",
+    "IT.ADAE.TRTA",
+    "IT.ADAE.TRTAN",
+    "IT.ADAE.AGE",
+    "IT.ADAE.AGEGR1",
+    "IT.ADAE.AGEGR1N",
+    "IT.ADAE.RACE",
+    "IT.ADAE.RACEN",
+    "IT.ADAE.SEX",
+    "IT.ADAE.SAFFL",
+    "IT.ADAE.TRTSDT",
+    "IT.ADAE.TRTEDT",
+    "IT.ADAE.ASTDT",
+    "IT.ADAE.ASTDTF",
+    "IT.ADAE.ASTDY",
+    "IT.ADAE.AENDT",
+    "IT.ADAE.AENDY",
+    "IT.ADAE.ADURN",
+    "IT.ADAE.ADURU",
+    "IT.ADAE.AETERM",
+    "IT.ADAE.AELLT",
+    "IT.ADAE.AELLTCD",
+    "IT.ADAE.AEDECOD",
+    "IT.ADAE.AEPTCD",
+    "IT.ADAE.AEHLT",
+    "IT.ADAE.AEHLTCD",
+    "IT.ADAE.AEHLGT",
+    "IT.ADAE.AEHLGTCD",
+    "IT.ADAE.AEBODSYS",
+    "IT.ADAE.AESOC",
+    "IT.ADAE.AESOCCD",
+    "IT.ADAE.AESEV",
+    "IT.ADAE.AESER",
+    "IT.ADAE.AESCAN",
+    "IT.ADAE.AESCONG",
+    "IT.ADAE.AESDISAB",
+    "IT.ADAE.AESDTH",
+    "IT.ADAE.AESHOSP",
+    "IT.ADAE.AESLIFE",
+    "IT.ADAE.AESOD",
+    "IT.ADAE.AEREL",
+    "IT.ADAE.AEACN",
+    "IT.ADAE.AEOUT",
+    "IT.ADAE.AESEQ",
+    "IT.ADAE.TRTEMFL",
+    "IT.ADAE.AOCCFL",
+    "IT.ADAE.AOCCSFL",
+    "IT.ADAE.AOCCPFL",
+    "IT.ADAE.AOCC02FL",
+    "IT.ADAE.AOCC03FL",
+    "IT.ADAE.AOCC04FL",
+    "IT.ADAE.CQ01NAM",
+    "IT.ADAE.AOCC01FL",
+  ],
+  "leaf": {
+    "id": "LF.ADAE",
+    "title": "adae.xpt ",
+    "xlink_href": "adae.xpt",
+  },
+  "name": "ADAE",
+  "oid": "IG.ADAE",
+  "purpose": "Analysis",
+  "repeating": true,
+  "sasDatasetName": "ADAE",
+  "standardOid": "STD.01",
+  "structure": "one record per subject per adverse event",
+}
+`;
+
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match leaf LF.ADRG snapshot 1`] = `
+{
+  "id": "LF.ADRG",
+  "title": "Analysis Data Reviewer's Guide",
+  "xlink_href": "adrg.pdf",
+}
+`;
+
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match valueList VL.ADQSADAS.AVAL snapshot 1`] = `
+{
+  "itemRefs": {
+    "IT.ADQSADAS.AVAL.ACITM01-ACITM14": {
+      "itemOid": "IT.ADQSADAS.AVAL.ACITM01-ACITM14",
+      "mandatory": false,
+      "orderNumber": 1,
+    },
+    "IT.ADQSADAS.AVAL.ACTOT": {
+      "itemOid": "IT.ADQSADAS.AVAL.ACTOT",
+      "mandatory": false,
+      "methodOid": "MT.ADQSADAS.AVAL.ACTOT",
+      "orderNumber": 2,
+    },
+  },
+  "itemRefsOrder": [
+    "IT.ADQSADAS.AVAL.ACITM01-ACITM14",
+    "IT.ADQSADAS.AVAL.ACTOT",
+  ],
+  "oid": "VL.ADQSADAS.AVAL",
+}
+`;
+
+exports[`Define-XML 2.0 Parser ADaM Snapshots should match whereClause WC.ADQSADAS.AVAL.ACITM01-ACITM14 snapshot 1`] = `
+{
+  "oid": "WC.ADQSADAS.AVAL.ACITM01-ACITM14",
+  "rangeChecks": [
+    {
+      "checkValues": [
+        "ACITM01",
+        "ACITM02",
+        "ACITM03",
+        "ACITM04",
+        "ACITM05",
+        "ACITM06",
+        "ACITM07",
+        "ACITM08",
+        "ACITM09",
+        "ACITM10",
+        "ACITM11",
+        "ACITM12",
+        "ACITM13",
+        "ACITM14",
+      ],
+      "comparator": "IN",
+      "itemOid": "IT.ADQSADAS.PARAMCD",
+      "softHard": "Soft",
+    },
+  ],
+}
+`;
+
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match DM itemGroupDef snapshot 1`] = `
+{
+  "archiveLocationId": "LF.DM",
+  "class": {
+    "name": "SPECIAL PURPOSE",
+  },
+  "commentOid": "COM.DOMAIN.DM",
+  "description": [
+    {
+      "value": "Demographics",
+      "xml_lang": "en",
+    },
+  ],
+  "domain": "DM",
+  "isReferenceData": false,
+  "itemRefs": {
+    "IT.DM.AGE": {
+      "itemOid": "IT.DM.AGE",
+      "mandatory": true,
+      "methodOid": "MT.AGE",
+      "orderNumber": 9,
+    },
+    "IT.DM.AGEU": {
+      "itemOid": "IT.DM.AGEU",
+      "mandatory": false,
+      "orderNumber": 10,
+    },
+    "IT.DM.ARM": {
+      "itemOid": "IT.DM.ARM",
+      "mandatory": true,
+      "orderNumber": 15,
+    },
+    "IT.DM.ARMCD": {
+      "itemOid": "IT.DM.ARMCD",
+      "mandatory": true,
+      "orderNumber": 14,
+    },
+    "IT.DM.BRTHDTC": {
+      "itemOid": "IT.DM.BRTHDTC",
+      "mandatory": false,
+      "orderNumber": 8,
+    },
+    "IT.DM.COUNTRY": {
+      "itemOid": "IT.DM.COUNTRY",
+      "mandatory": true,
+      "orderNumber": 16,
+    },
+    "IT.DM.DOMAIN": {
+      "itemOid": "IT.DM.DOMAIN",
+      "mandatory": true,
+      "orderNumber": 2,
+    },
+    "IT.DM.ETHNIC": {
+      "itemOid": "IT.DM.ETHNIC",
+      "mandatory": true,
+      "orderNumber": 13,
+    },
+    "IT.DM.RACE": {
+      "itemOid": "IT.DM.RACE",
+      "mandatory": false,
+      "methodOid": "MT.RACE",
+      "orderNumber": 12,
+    },
+    "IT.DM.RFENDTC": {
+      "itemOid": "IT.DM.RFENDTC",
+      "mandatory": false,
+      "methodOid": "MT.RFENDTC",
+      "orderNumber": 6,
+    },
+    "IT.DM.RFSTDTC": {
+      "itemOid": "IT.DM.RFSTDTC",
+      "mandatory": false,
+      "methodOid": "MT.RFSTDTC",
+      "orderNumber": 5,
+    },
+    "IT.DM.SEX": {
+      "itemOid": "IT.DM.SEX",
+      "mandatory": true,
+      "orderNumber": 11,
+    },
+    "IT.DM.SITEID": {
+      "itemOid": "IT.DM.SITEID",
+      "mandatory": true,
+      "orderNumber": 7,
+    },
+    "IT.DM.SUBJID": {
+      "itemOid": "IT.DM.SUBJID",
+      "mandatory": true,
+      "orderNumber": 4,
+    },
+    "IT.STUDYID": {
+      "itemOid": "IT.STUDYID",
+      "keySequence": 1,
+      "mandatory": true,
+      "orderNumber": 1,
+    },
+    "IT.USUBJID": {
+      "itemOid": "IT.USUBJID",
+      "keySequence": 2,
+      "mandatory": true,
+      "methodOid": "MT.USUBJID",
+      "orderNumber": 3,
+    },
+  },
+  "itemRefsOrder": [
+    "IT.STUDYID",
+    "IT.DM.DOMAIN",
+    "IT.USUBJID",
+    "IT.DM.SUBJID",
+    "IT.DM.RFSTDTC",
+    "IT.DM.RFENDTC",
+    "IT.DM.SITEID",
+    "IT.DM.BRTHDTC",
+    "IT.DM.AGE",
+    "IT.DM.AGEU",
+    "IT.DM.SEX",
+    "IT.DM.RACE",
+    "IT.DM.ETHNIC",
+    "IT.DM.ARMCD",
+    "IT.DM.ARM",
+    "IT.DM.COUNTRY",
+  ],
+  "leaf": {
+    "id": "LF.DM",
+    "title": "dm.xpt",
+    "xlink_href": "dm.xpt",
+  },
+  "name": "DM",
+  "oid": "IG.DM",
+  "purpose": "Tabulation",
+  "repeating": false,
+  "sasDatasetName": "DM",
+  "standardOid": "STD.1",
+  "structure": "One record per subject",
+}
+`;
+
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match LBSTNRC itemDef with multiple origins snapshot 1`] = `
+{
+  "dataType": "text",
+  "description": [
+    {
+      "value": "Reference Range for Char Rslt-Std Units",
+      "xml_lang": "en",
+    },
+  ],
+  "length": 19,
+  "name": "LBSTNRC",
+  "oid": "IT.LB.LBSTNRC",
+  "origins": [
+    {
+      "source": "Vendor",
+      "type": "Collected",
+    },
+    {
+      "source": "Sponsor",
+      "type": "Derived",
+    },
+  ],
+  "sasFieldName": "LBSTNRC",
+}
+`;
+
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match code list with extended values snapshot 1`] = `
+{
+  "alias": [
+    {
+      "context": "nci:ExtCodeID",
+      "name": "C85492",
+    },
+  ],
+  "dataType": "text",
+  "enumeratedItems": [
+    {
+      "codedValue": "DIPSTICK",
+      "extendedValue": true,
+    },
+    {
+      "codedValue": "QUANT",
+      "extendedValue": true,
+    },
+  ],
+  "name": "Method",
+  "oid": "CL.METHOD",
+  "standardOid": "STD.3",
+}
+`;
+
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match comment COM.DOMAIN.DM snapshot 1`] = `
+{
+  "description": [
+    {
+      "value": "See Reviewer's Guide, Section 2.1 Demographics",
+      "xml_lang": "en",
+    },
+  ],
+  "documentRefs": [
+    {
+      "leafId": "LF.csdrg",
+      "pdfPageRefs": [
+        {
+          "pageRefs": "section2.1",
+          "type": "NamedDestination",
+        },
+      ],
+    },
+  ],
+  "oid": "COM.DOMAIN.DM",
+}
+`;
+
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match external code list snapshot 1`] = `
+{
+  "commentOid": "COM.ISO3166",
+  "dataType": "text",
+  "description": [
+    {
+      "value": "Planned Country of Investigational Sites",
+      "xml_lang": "en",
+    },
+  ],
+  "externalCodeList": {
+    "dictionary": "ISO-3166 (Country Codes)",
+    "href": "https://www.iso.org/iso-3166-country-codes.html",
+    "version": "2013-11-15",
+  },
+  "name": "Country Codes",
+  "oid": "CL.ISO.COUNTRY",
+  "standardOid": "STD.3",
+}
+`;
+
+exports[`Define-XML 2.0 Parser SDTM Snapshots should match method MT.BMISC snapshot 1`] = `
+{
+  "description": [
+    {
+      "value": "character value of VSSTRESN",
+      "xml_lang": "en",
+    },
+  ],
+  "formalExpressions": [
+    {
+      "context": " SAS 9.0 or later as a macro call. Macro developed as a standard macro that returns a value to be assigned as part of a data step assignment or proc sql select and update statements. Notes: 1) need to be able to specify more information about the context of a method, the method version and corresponding input parameters. For ODMv1.3.2 / Define-XML 2.1 free-text. 2) As an example, included a version of the code handled on the macro name as it can be defined by the user
+somehwere in the metadata definition for the method to be used. ",
+      "value": "
+          %convert_to_character_versionx(numeric_value=bmi_numeric_value,length=bmi_defined_lenght,sd=bmi_defined_sd)
+        ",
+    },
+    {
+      "context": "SAS 9.0 or later using a SAS Base function, asuming no restriction on length and decimal places ",
+      "value": "
+          putc(bmi_numeric_value,best.)
+        ",
+    },
+    {
+      "context": "R version xyz, using a generic method asuming no restriction on length and decimal places ",
+      "value": "
+          toString(bmi_numeric_value, witdth=NULL)
+        ",
+    },
+  ],
+  "name": "Algorithm to derive BMISC",
+  "oid": "MT.BMISC",
+  "type": "Computation",
+}
+`;

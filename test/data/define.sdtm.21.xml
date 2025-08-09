@@ -1169,6 +1169,7 @@ Notes:
           <TranslatedText xml:lang="en">Reference Range for Char Rslt-Std Units</TranslatedText>
         </Description>
         <def:Origin Type="Collected" Source="Vendor"/>
+        <def:Origin Type="Derived" Source="Sponsor"/>
       </ItemDef>
       <ItemDef OID="IT.LB.LBSTNRHI" Name="LBSTNRHI" DataType="float" Length="4" SignificantDigits="2" def:DisplayFormat="4.2" SASFieldName="LBSTNRHI">
         <Description>
@@ -2963,6 +2964,9 @@ Notes:
         <Alias Context="Sponsor" Name="XY123473"/>
       </CodeList>
       <CodeList OID="CL.ISO.COUNTRY" Name="Country Codes" DataType="text" def:StandardOID="STD.3" def:CommentOID="COM.ISO3166">
+        <Description>
+          <TranslatedText xml:lang="en">Planned Country of Investigational Sites</TranslatedText>
+        </Description>
         <ExternalCodeList Dictionary="ISO-3166 (Country Codes)" Version="2013-11-15" href="https://www.iso.org/iso-3166-country-codes.html"/>
       </CodeList>
 
