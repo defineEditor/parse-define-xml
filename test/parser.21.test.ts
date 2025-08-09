@@ -3,7 +3,7 @@ import path from "path";
 import parseDefineXml from "parser/define.21";
 import { MetaDataVersion } from "interfaces/define.xml.21";
 
-describe("Define-XML 2.0 Parser", () => {
+describe("Define-XML 2.1 Parser", () => {
     let xmlStringAdam: string;
     let xmlStringSdtm: string;
 

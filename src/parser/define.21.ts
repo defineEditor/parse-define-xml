@@ -1,4 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+/**
+ * Parse Define-XML 2.1 document to TypeScript interfaces
+ */
+
 import * as xml2js from "xml2js";
 import { convertAttributeNameToLowerCamelCase, removeNamespaces } from "parser/utils";
 import type {
@@ -39,10 +44,6 @@ import type {
     ItemGroupDefClass,
     OriginSource,
 } from "interfaces/define.xml.21.d.ts";
-
-/**
- * Parse Define-XML 2.0 document to TypeScript interfaces
- */
 
 const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
     const text = translatedTextRaw.translatedText[0];
