@@ -43,6 +43,7 @@ import type {
     ItemGroupDefSubclass,
     ItemGroupDefClass,
     OriginSource,
+    DefineXml,
 } from "interfaces/define.xml.21.d.ts";
 
 const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
@@ -739,14 +740,41 @@ const parseOdm = (odmRaw: any): Odm => {
 };
 
 /**
- * Main parser function for Define-XML 2.0
+ * Main parser function for Define-XML 2.1
  */
-const parseDefineXml = async (xmlString: string): Promise<Odm> => {
+const parseDefineXml = async (xmlString: string): Promise<DefineXml> => {
     // Parse XML string into object using xml2js
-    let result: any;
+    const defineXml: Partial<DefineXml> = {
+        xml: {},
+        styleSheet: {},
+    };
+    let parsedXml: Record<string, any> = {};
 
     try {
-        result = await xml2js.parseStringPromise(xmlString, {
+        // Read first lines until ODM tag which contain XML declaration and stylesheet information
+        const xmlHeader = xmlString.match(/<\?xml.*\?>/);
+        const xmlStyleSheet = xmlString.match(/<\?xml-stylesheet.*\?>/);
+        if (xmlHeader && defineXml.xml) {
+            const versionMatch = xmlHeader[0].match(/<\?xml.*\s+version="([^"]+)"\s+encoding="([^"]+)"\s*\?>/);
+            const encodingMatch = xmlHeader[0].match(/<\?xml.*\s+encoding="([^"]+)"\s*\?>/);
+            if (versionMatch) {
+                defineXml.xml.version = versionMatch[1];
+            }
+            if (encodingMatch) {
+                defineXml.xml.encoding = encodingMatch[1];
+            }
+        }
+        if (xmlStyleSheet && defineXml.styleSheet) {
+            const typeMatch = xmlStyleSheet[0].match(/type="([^"]+)"/);
+            const hrefMatch = xmlStyleSheet[0].match(/href="([^"]+)"/);
+            if (typeMatch) {
+                defineXml.styleSheet.type = typeMatch[1];
+            }
+            if (hrefMatch) {
+                defineXml.styleSheet.href = hrefMatch[1];
+            }
+        }
+        parsedXml = await xml2js.parseStringPromise(xmlString, {
             explicitArray: true,
             mergeAttrs: false,
             explicitCharkey: false,
@@ -758,13 +786,15 @@ const parseDefineXml = async (xmlString: string): Promise<Odm> => {
     }
 
     // Convert all attribute/element names to lower camel case and remove def: and arm: namespaces
-    const resultUpdated = convertAttributeNameToLowerCamelCase(removeNamespaces(result)) as Record<string, any>;
+    const parsedXmlUpdated = convertAttributeNameToLowerCamelCase(removeNamespaces(parsedXml)) as Record<string, any>;
 
-    if (!resultUpdated || !resultUpdated["odm"]) {
+    if (!parsedXmlUpdated || !parsedXmlUpdated["odm"]) {
         throw new Error("Invalid Define-XML structure: missing ODM root element");
     }
 
-    return parseOdm(resultUpdated["odm"]);
+    defineXml.odm = parseOdm(parsedXmlUpdated["odm"]);
+
+    return defineXml as DefineXml;
 };
 
 export default parseDefineXml;

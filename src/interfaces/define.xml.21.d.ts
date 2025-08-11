@@ -268,3 +268,15 @@ export interface ItemRef {
     isNonStandard?: true;
     standardOid?: string;
 }
+
+export interface DefineXml {
+    xml: {
+        version?: string;
+        encoding?: string;
+    };
+    styleSheet: {
+        type?: string;
+        href?: string;
+    };
+    odm: Odm;
+}

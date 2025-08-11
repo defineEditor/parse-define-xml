@@ -228,3 +228,15 @@ export interface ItemRef {
     roleCodeListOid?: string;
     whereClauseRefs?: string[];
 }
+
+export interface DefineXml {
+    xml: {
+        version?: string;
+        encoding?: string;
+    };
+    styleSheet: {
+        type?: string;
+        href?: string;
+    };
+    odm: Odm;
+}

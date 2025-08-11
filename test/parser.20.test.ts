@@ -14,17 +14,17 @@ describe("Define-XML 2.0 Parser", () => {
     });
 
     it("should parse ODM root and Study", async () => {
-        const odm = await parseDefineXml(xmlStringAdam);
-        expect(odm).toBeDefined();
-        expect(odm.study).toBeDefined();
-        expect(odm.study.studyOid).toBeTruthy();
-        expect(odm.study.globalVariables).toBeDefined();
-        expect(odm.study.metaDataVersion).toBeDefined();
+        const defineXml = await parseDefineXml(xmlStringAdam);
+        expect(defineXml.odm).toBeDefined();
+        expect(defineXml.odm.study).toBeDefined();
+        expect(defineXml.odm.study.studyOid).toBeTruthy();
+        expect(defineXml.odm.study.globalVariables).toBeDefined();
+        expect(defineXml.odm.study.metaDataVersion).toBeDefined();
     });
 
     it("should parse ItemGroupDefs and ItemDefs", async () => {
-        const odm = await parseDefineXml(xmlStringAdam);
-        const mdv = odm.study.metaDataVersion;
+        const defineXml = await parseDefineXml(xmlStringAdam);
+        const mdv = defineXml.odm.study.metaDataVersion;
         expect(mdv.itemGroupDefs).toBeInstanceOf(Object);
         expect(Array.isArray(mdv.itemGroupDefsOrder)).toBe(true);
         expect(mdv.itemDefs).toBeInstanceOf(Object);
@@ -32,8 +32,8 @@ describe("Define-XML 2.0 Parser", () => {
     });
 
     it("should parse CodeLists and ValueListDefs", async () => {
-        const odm = await parseDefineXml(xmlStringAdam);
-        const mdv = odm.study.metaDataVersion;
+        const defineXml = await parseDefineXml(xmlStringAdam);
+        const mdv = defineXml.odm.study.metaDataVersion;
         expect(mdv.codeLists).toBeInstanceOf(Object);
         expect(Array.isArray(mdv.codeListsOrder)).toBe(true);
         expect(mdv.valueListDefs).toBeInstanceOf(Object);
@@ -41,19 +41,31 @@ describe("Define-XML 2.0 Parser", () => {
     });
 
     it("should parse Leafs and CommentDefs", async () => {
-        const odm = await parseDefineXml(xmlStringAdam);
-        const mdv = odm.study.metaDataVersion;
+        const defineXml = await parseDefineXml(xmlStringAdam);
+        const mdv = defineXml.odm.study.metaDataVersion;
         expect(mdv.leafs).toBeInstanceOf(Object);
         expect(Array.isArray(mdv.leafsOrder)).toBe(true);
         expect(mdv.commentDefs).toBeInstanceOf(Object);
         expect(Array.isArray(mdv.commentDefsOrder)).toBe(true);
     });
 
+    it("should return xml information", async () => {
+        const defineXml = await parseDefineXml(xmlStringAdam);
+        const xml = defineXml.xml;
+        expect(xml).toMatchSnapshot();
+    });
+
+    it("should return stylesheet information", async () => {
+        const defineXml = await parseDefineXml(xmlStringAdam);
+        const styleSheet = defineXml.styleSheet;
+        expect(styleSheet).toMatchSnapshot();
+    });
+
     describe("SDTM Snapshots", () => {
         let mdv: MetaDataVersion;
         beforeAll(async () => {
-            const odm = await parseDefineXml(xmlStringSdtm);
-            mdv = odm.study.metaDataVersion;
+            const defineXml = await parseDefineXml(xmlStringSdtm);
+            mdv = defineXml.odm.study.metaDataVersion;
         });
 
         it("should match AE itemGroupDef snapshot", () => {
@@ -90,8 +102,8 @@ describe("Define-XML 2.0 Parser", () => {
     describe("ADaM Snapshots", () => {
         let mdv: MetaDataVersion;
         beforeAll(async () => {
-            const odm = await parseDefineXml(xmlStringAdam);
-            mdv = odm.study.metaDataVersion;
+            const defineXml = await parseDefineXml(xmlStringAdam);
+            mdv = defineXml.odm.study.metaDataVersion;
         });
 
         it("should match ADSL itemGroupDef snapshot", () => {
