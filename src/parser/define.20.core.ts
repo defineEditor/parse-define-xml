@@ -4,18 +4,7 @@
  * Core functions to parse Define XML 2.0 and ARM
  */
 
-import type { DocumentRef, PdfPageRef, PdfPageRefType, TranslatedText } from "interfaces/define.xml.20.d.ts";
-
-export const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
-    const text = translatedTextRaw.translatedText[0];
-    const translatedText: TranslatedText = {
-        value: text.value || text,
-    };
-    if (text["$"] && text["$"]["xml:lang"]) {
-        translatedText.xml_lang = text["$"]["xml:lang"];
-    }
-    return translatedText;
-};
+import type { DocumentRef, PdfPageRef, PdfPageRefType } from "interfaces/define.xml.20.d.ts";
 
 const parsePdfPageRefs = (pdfPageRefsRaw: any[]): PdfPageRef[] => {
     // There are no PDF page references

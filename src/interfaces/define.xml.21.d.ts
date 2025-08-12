@@ -9,38 +9,25 @@ import {
     ItemGroupDefSubclassNames,
     ItemGroupDefPurpose,
     PdfPageRefType,
-    Comparator,
-    SoftHard,
     CodeListType,
     StandardName,
     StandardType,
     StandardStatus,
+    Alias,
+    TranslatedText,
+    Leaf,
+    WhereClauseDef,
+    ExternalCodeList,
+    EnumeratedItem,
+    CodeListItem,
+    FormalExpression,
+    GlobalVariables,
 } from "interfaces/define.xml.core";
 
 export type OriginType = "Assigned" | "Collected" | "Derived" | "Not Available" | "Other" | "Predecessor" | "Protocol";
 export type OriginSource = "Investigator" | "Sponsor" | "Subject" | "Vendor";
 
-export interface Alias {
-    context: string;
-    name: string;
-}
-
-export interface TranslatedText {
-    xml_lang?: string;
-    value: string;
-}
-
-export interface Leaf {
-    id: string;
-    xlink_href: string;
-    title: string;
-}
-
-export interface DocumentRef {
-    leafId: string;
-    pdfPageRefs?: PdfPageRef[];
-}
-
+// PdfPageRef is specialized in 2.1 with optional title
 export interface PdfPageRef {
     type: PdfPageRefType;
     pageRefs?: string;
@@ -49,24 +36,31 @@ export interface PdfPageRef {
     title?: string;
 }
 
+export interface DocumentRef {
+    leafId: string;
+    pdfPageRefs?: PdfPageRef[];
+}
+
+export interface CommentDef {
+    oid: string;
+    description?: TranslatedText[];
+    documentRefs?: DocumentRef[];
+}
+
+export interface MethodDef {
+    oid: string;
+    name: string;
+    type: "Computation" | "Imputation";
+    description?: TranslatedText[];
+    documentRefs?: DocumentRef[];
+    formalExpressions?: FormalExpression[];
+}
+
 export interface Origin {
     type: OriginType;
     description?: TranslatedText[];
     documentRefs?: DocumentRef[];
     source?: OriginSource;
-}
-
-export interface WhereClauseDef {
-    oid: string;
-    commentOid?: string;
-    rangeChecks: RangeCheck[];
-}
-
-export interface RangeCheck {
-    comparator: Comparator;
-    softHard: SoftHard;
-    itemOid: string;
-    checkValues: string[];
 }
 
 export interface CodeList {
@@ -83,50 +77,6 @@ export interface CodeList {
     enumeratedItems?: EnumeratedItem[];
     codeListItems?: CodeListItem[];
     externalCodeList?: ExternalCodeList;
-}
-
-export interface ExternalCodeList {
-    dictionary: string;
-    version: string;
-    ref?: string;
-    href?: string;
-}
-
-export interface EnumeratedItem {
-    codedValue: string;
-    rank?: number;
-    orderNumber?: number;
-    extendedValue?: true;
-    alias?: Alias[];
-}
-
-export interface CodeListItem {
-    codedValue: string;
-    rank?: number;
-    orderNumber?: number;
-    extendedValue?: true;
-    decode: TranslatedText[];
-    alias?: Alias[];
-}
-
-export interface CommentDef {
-    oid: string;
-    description?: TranslatedText[];
-    documentRefs?: DocumentRef[];
-}
-
-export interface FormalExpression {
-    context: string;
-    value: string;
-}
-
-export interface MethodDef {
-    oid: string;
-    name: string;
-    type: "Computation" | "Imputation";
-    description?: TranslatedText[];
-    documentRefs?: DocumentRef[];
-    formalExpressions?: FormalExpression[];
 }
 
 export interface Standard {
@@ -172,12 +122,6 @@ export interface ValueListDef {
     itemRefs: Record<string, ItemRef>;
     itemRefsOrder: string[];
     description?: TranslatedText[];
-}
-
-export interface GlobalVariables {
-    studyName: string;
-    studyDescription: string;
-    protocolName: string;
 }
 
 export interface Study {

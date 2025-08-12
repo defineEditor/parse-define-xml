@@ -8,32 +8,24 @@ import {
     ItemGroupDefClassNames,
     ItemGroupDefPurpose,
     PdfPageRefType,
-    Comparator,
-    SoftHard,
     CodeListType,
+    Alias,
+    TranslatedText,
+    Leaf,
+    WhereClauseDef,
+    EnumeratedItem,
+    CodeListItem,
+    ExternalCodeList,
+    FormalExpression,
+    GlobalVariables,
 } from "interfaces/define.xml.core";
 
 export type OriginType = "CRF" | "Derived" | "Assigned" | "Protocol" | "eDT" | "Predecessor";
 
-export interface Alias {
-    context: string;
-    name: string;
-}
-
-export interface TranslatedText {
-    xml_lang?: string;
-    value: string;
-}
-
-export interface Leaf {
-    id: string;
-    xlink_href: string;
-    title: string;
-}
-
-export interface DocumentRef {
-    leafId: string;
-    pdfPageRefs?: PdfPageRef[];
+export interface Origin {
+    type: OriginType;
+    description?: TranslatedText[];
+    documentRefs?: DocumentRef[];
 }
 
 export interface PdfPageRef {
@@ -43,23 +35,24 @@ export interface PdfPageRef {
     lastPage?: number;
 }
 
-export interface Origin {
-    type: OriginType;
+export interface DocumentRef {
+    leafId: string;
+    pdfPageRefs?: PdfPageRef[];
+}
+
+export interface CommentDef {
+    oid: string;
     description?: TranslatedText[];
     documentRefs?: DocumentRef[];
 }
 
-export interface WhereClauseDef {
+export interface MethodDef {
     oid: string;
-    commentOid?: string;
-    rangeChecks: RangeCheck[];
-}
-
-export interface RangeCheck {
-    comparator: Comparator;
-    softHard: SoftHard;
-    itemOid: string;
-    checkValues: string[];
+    name: string;
+    type: "Computation" | "Imputation";
+    description?: TranslatedText[];
+    documentRefs?: DocumentRef[];
+    formalExpressions?: FormalExpression[];
 }
 
 export interface CodeList {
@@ -72,50 +65,6 @@ export interface CodeList {
     enumeratedItems?: EnumeratedItem[];
     codeListItems?: CodeListItem[];
     externalCodeList?: ExternalCodeList;
-}
-
-export interface ExternalCodeList {
-    dictionary: string;
-    version: string;
-    ref?: string;
-    href?: string;
-}
-
-export interface EnumeratedItem {
-    codedValue: string;
-    rank?: number;
-    orderNumber?: number;
-    extendedValue?: true;
-    alias?: Alias[];
-}
-
-export interface CodeListItem {
-    codedValue: string;
-    rank?: number;
-    orderNumber?: number;
-    extendedValue?: true;
-    decode: TranslatedText[];
-    alias?: Alias[];
-}
-
-export interface CommentDef {
-    oid: string;
-    description?: TranslatedText[];
-    documentRefs?: DocumentRef[];
-}
-
-export interface FormalExpression {
-    context: string;
-    value: string;
-}
-
-export interface MethodDef {
-    oid: string;
-    name: string;
-    type: "Computation" | "Imputation";
-    description?: TranslatedText[];
-    documentRefs?: DocumentRef[];
-    formalExpressions?: FormalExpression[];
 }
 
 export interface MetaDataVersion {
@@ -149,12 +98,6 @@ export interface ValueListDef {
     oid: string;
     itemRefs: Record<string, ItemRef>;
     itemRefsOrder: string[];
-}
-
-export interface GlobalVariables {
-    studyName: string;
-    studyDescription: string;
-    protocolName: string;
 }
 
 export interface Study {

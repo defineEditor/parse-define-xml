@@ -23,10 +23,10 @@
         "lint": "eslint . --ignore-pattern 'dist'"
     },
     "jest": {
+        "rootDir": ".",
         "moduleDirectories": [
             "node_modules",
-            "test",
-            "."
+            "src"
         ],
         "moduleFileExtensions": [
             "js",

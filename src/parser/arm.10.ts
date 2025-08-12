@@ -18,14 +18,9 @@ import {
     Documentation21,
     ProgrammingCode21,
 } from "interfaces/arm.10";
-import {
-    parseTranslatedText as parseTranslatedText20,
-    parseDocumentRefs as parseDocumentRefs20,
-} from "parser/define.20.core";
-import {
-    parseTranslatedText as parseTranslatedText21,
-    parseDocumentRefs as parseDocumentRefs21,
-} from "parser/define.21.core";
+import { parseTranslatedText } from "parser/define.core";
+import { parseDocumentRefs as parseDocumentRefs20 } from "parser/define.20.core";
+import { parseDocumentRefs as parseDocumentRefs21 } from "parser/define.21.core";
 
 interface ParseAnalysisResultDisplays {
     (analysisResultDisplayRaw: any, defineVer: "2.0"): AnalysisResultDisplays20["analysisResultDisplays"];
@@ -65,7 +60,7 @@ const parseResultDisplay: ParseResultDisplays = (resultDisplaysRaw: any[], defin
             const resultDisplay: ResultDisplay20 = {
                 oid: resultDisplayRaw["$"]["oid"],
                 name: resultDisplayRaw["$"]["name"],
-                description: resultDisplayRaw["description"].map(parseTranslatedText20),
+                description: resultDisplayRaw["description"].map(parseTranslatedText),
                 analysisResults,
                 analysisResultOrder,
             };
@@ -87,7 +82,7 @@ const parseResultDisplay: ParseResultDisplays = (resultDisplaysRaw: any[], defin
             const resultDisplay: ResultDisplay21 = {
                 oid: resultDisplayRaw["$"]["oid"],
                 name: resultDisplayRaw["$"]["name"],
-                description: resultDisplayRaw["description"].map(parseTranslatedText21),
+                description: resultDisplayRaw["description"].map(parseTranslatedText),
                 analysisResults,
                 analysisResultOrder,
             };
@@ -129,7 +124,7 @@ const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): 
         parameterOid: analysisResultRaw["$"]["parameterOid"],
         analysisReason: analysisResultRaw["$"]["analysisReason"],
         analysisPurpose: analysisResultRaw["$"]["analysisPurpose"],
-        description: analysisResultRaw["description"].map(parseTranslatedText20),
+        description: analysisResultRaw["description"].map(parseTranslatedText),
         analysisDatasets: parseAnalysisDatasets(analysisResultRaw["analysisDatasets"]),
     };
     // Remove parameterOid if not present as it is optional
@@ -229,7 +224,7 @@ interface ParseDocumentation {
 const parseDocumentation: ParseDocumentation = (documentationRaw, defineVer): Documentation20 | Documentation21 => {
     if (defineVer === "2.0") {
         const documentation: Documentation20 = {
-            description: documentationRaw[0]["description"].map(parseTranslatedText20),
+            description: documentationRaw[0]["description"].map(parseTranslatedText),
         };
         if (documentationRaw[0]["documentRef"]) {
             documentation.documents = parseDocumentRefs20(documentationRaw[0]["documentRef"]);
@@ -238,7 +233,7 @@ const parseDocumentation: ParseDocumentation = (documentationRaw, defineVer): Do
     }
     if (defineVer === "2.1") {
         const documentation: Documentation21 = {
-            description: documentationRaw[0]["description"].map(parseTranslatedText21),
+            description: documentationRaw[0]["description"].map(parseTranslatedText),
         };
         if (documentationRaw[0]["documentRef"]) {
             documentation.documents = documentationRaw[0]["documentRef"].map(parseDocumentRefs21);
