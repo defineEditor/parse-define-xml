@@ -20,6 +20,7 @@
     "scripts": {
         "test": "jest --coverage",
         "build": "tsc",
+        "release": "npm run lint && npm run test && npm run build && npm publish",
         "lint": "eslint . --ignore-pattern 'dist'"
     },
     "jest": {
