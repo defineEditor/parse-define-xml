@@ -42,6 +42,7 @@ import type {
     DefineXml,
 } from "interfaces/define.xml.21.d.ts";
 import { ArmDefineXml21 } from "interfaces/arm.10";
+import { parseAnalysisResultDisplays } from "parser/arm.10";
 import { parseTranslatedText, parseDocumentRefs } from "parser/define.21.core";
 
 const parseAliases = (aliasesRaw: any[]): Alias[] => {
@@ -579,7 +580,12 @@ const parseStandards = (standardsRaw: any[]): { standards: Record<string, Standa
     return { standards, standardsOrder };
 };
 
-const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
+interface ParseMetadata {
+    (metadataRaw: any, hasArm: true): ArmDefineXml21["odm"]["study"]["metaDataVersion"];
+    (metadataRaw: any, hasArm?: false): MetaDataVersion;
+}
+
+const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean): any => {
     const { itemGroupDefs, itemGroupDefsOrder } = parseItemGroups(metadataRaw["itemGroupDef"]);
     const { itemDefs, itemDefsOrder } = parseItemDefs(metadataRaw["itemDef"]);
     const { standards, standardsOrder } = parseStandards(metadataRaw["standards"]);
@@ -641,7 +647,15 @@ const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
         result.leafsOrder = leafsOrder;
     }
 
-    return result;
+    if (hasArm === true) {
+        const resultWithArm: ArmDefineXml21["odm"]["study"]["metaDataVersion"] = {
+            ...result,
+            analysisResultDisplays: parseAnalysisResultDisplays(metadataRaw["analysisResultDisplays"], "2.1"),
+        };
+        return resultWithArm;
+    } else {
+        return result;
+    }
 };
 
 const parseGlobalVariables = (globalVariablesRaw: any): GlobalVariables => ({
@@ -650,11 +664,28 @@ const parseGlobalVariables = (globalVariablesRaw: any): GlobalVariables => ({
     protocolName: globalVariablesRaw["protocolName"][0],
 });
 
-const parseStudy = (studyRaw: any): Study => ({
-    studyOid: studyRaw["$"]["oid"],
-    globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
-    metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
-});
+interface ParseStudy {
+    (studyRaw: any, hasArm: true): ArmDefineXml21["odm"]["study"];
+    (studyRaw: any, hasArm?: false): Study;
+}
+
+const parseStudy: ParseStudy = (studyRaw: any, hasArm?: boolean): any => {
+    if (hasArm === true) {
+        const studyWithArm: ArmDefineXml21["odm"]["study"] = {
+            studyOid: studyRaw["$"]["oid"],
+            globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
+            metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0], hasArm),
+        };
+        return studyWithArm;
+    } else {
+        const study: Study = {
+            studyOid: studyRaw["$"]["oid"],
+            globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
+            metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
+        };
+        return study;
+    }
+};
 
 interface ParseOdm {
     (odmRaw: any, hasArm: true): ArmDefineXml21["odm"];
@@ -662,6 +693,12 @@ interface ParseOdm {
 }
 
 const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
+    let study: Study | ArmDefineXml21["odm"]["study"];
+    if (hasArm === true) {
+        study = parseStudy(odmRaw["study"][0], true);
+    } else {
+        study = parseStudy(odmRaw["study"][0]);
+    }
     const result: Odm = {
         xmlns: odmRaw["$"]["xmlns"] as "http://www.cdisc.org/ns/odm/v1.3",
         xmlns_def: odmRaw["$"]["xmlns:def"] as "http://www.cdisc.org/ns/def/v2.1",
@@ -670,7 +707,7 @@ const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
         fileType: "Snapshot",
         fileOid: odmRaw["$"]["fileOid"],
         creationDateTime: odmRaw["$"]["creationDateTime"],
-        study: parseStudy(odmRaw["study"][0]),
+        study,
         context: odmRaw["$"]["context"],
     };
     if (odmRaw["$"]["asOfDateTime"]) {
@@ -692,7 +729,11 @@ const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
         result.xmlns_xsi = odmRaw["$"]["xmlns:xsi"] as "http://www.w3.org/2001/XMLSchema-instance";
     }
     if (hasArm === true) {
-        (result as ArmDefineXml21["odm"]).xmlns_arm = odmRaw["$"]["xmlns:arm"] as "http://www.cdisc.org/ns/arm/v1.0";
+        const resultWithArm: ArmDefineXml21["odm"] = {
+            ...(result as ArmDefineXml21["odm"]),
+            xmlns_arm: odmRaw["$"]["xmlns:arm"] as "http://www.cdisc.org/ns/arm/v1.0",
+        };
+        return resultWithArm;
     } else {
         return result;
     }
