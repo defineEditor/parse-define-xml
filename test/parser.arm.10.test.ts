@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import parseDefineXml from "parser/define";
-import { MetaDataVersion20, MetaDataVersion21 } from "interfaces/arm.10";
+import { ArmDefine20, ArmDefine21 } from "interfaces/arm.10";
 
 describe("ARM 1.0 for Define-XML 2.0 Parser", () => {
     let xmlStringAdam20: string;
@@ -24,7 +24,7 @@ describe("ARM 1.0 for Define-XML 2.0 Parser", () => {
     });
 
     describe("ARM Snapshots for Define-XML 2.0", () => {
-        let mdv: MetaDataVersion20;
+        let mdv: ArmDefine20.MetaDataVersion;
         beforeAll(async () => {
             const defineXml = await parseDefineXml(xmlStringAdam20, "2.0", true);
             mdv = defineXml.odm.study.metaDataVersion;
@@ -37,7 +37,7 @@ describe("ARM 1.0 for Define-XML 2.0 Parser", () => {
     });
 
     describe("ARM Snapshots for Define-XML 2.1", () => {
-        let mdv: MetaDataVersion21;
+        let mdv: ArmDefine21.MetaDataVersion;
         beforeAll(async () => {
             const defineXml = await parseDefineXml(xmlStringAdam21, "2.1", true);
             mdv = defineXml.odm.study.metaDataVersion;

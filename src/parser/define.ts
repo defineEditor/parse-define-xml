@@ -1,13 +1,13 @@
-import { ArmDefineXml20, ArmDefineXml21 } from "interfaces/arm.10";
-import { DefineXml as DefineXml20 } from "interfaces/define.xml.20";
-import { DefineXml as DefineXml21 } from "interfaces/define.xml.21";
+import { ArmDefine20, ArmDefine21 } from "interfaces/arm.10";
+import { Define20 } from "interfaces/define.xml.20";
+import { Define21 } from "interfaces/define.xml.21";
 import parseDefineXml20 from "parser/define.20";
 import parseDefineXml21 from "parser/define.21";
 interface ParseDefineXml {
-    (xmlString: string, ver: "2.0", hasArm?: false): Promise<DefineXml20>;
-    (xmlString: string, ver: "2.1", hasArm?: false): Promise<DefineXml21>;
-    (xmlString: string, ver: "2.0", hasArm?: true): Promise<ArmDefineXml20>;
-    (xmlString: string, ver: "2.1", hasArm?: true): Promise<ArmDefineXml21>;
+    (xmlString: string, ver: "2.0", hasArm?: false): Promise<Define20.DefineXml>;
+    (xmlString: string, ver: "2.1", hasArm?: false): Promise<Define21.DefineXml>;
+    (xmlString: string, ver: "2.0", hasArm?: true): Promise<ArmDefine20.DefineXml>;
+    (xmlString: string, ver: "2.1", hasArm?: true): Promise<ArmDefine21.DefineXml>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

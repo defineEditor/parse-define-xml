@@ -4,15 +4,15 @@
  * Core functions to parse Define XML 2.0 and ARM
  */
 
-import type { DocumentRef, PdfPageRef, PdfPageRefType } from "interfaces/define.xml.20.d.ts";
+import { Define20 } from "interfaces/define.xml.20";
 
-const parsePdfPageRefs = (pdfPageRefsRaw: any[]): PdfPageRef[] => {
+const parsePdfPageRefs = (pdfPageRefsRaw: any[]): Define20.PdfPageRef[] => {
     // There are no PDF page references
     if (!pdfPageRefsRaw) return [];
 
     return pdfPageRefsRaw.map((ref) => {
-        const result: PdfPageRef = {
-            type: ref["$"]["type"] as PdfPageRefType,
+        const result: Define20.PdfPageRef = {
+            type: ref["$"]["type"] as Define20.PdfPageRefType,
             pageRefs: ref["$"]["pageRefs"],
         };
         if (ref["$"]["firstPage"]) {
@@ -26,13 +26,13 @@ const parsePdfPageRefs = (pdfPageRefsRaw: any[]): PdfPageRef[] => {
     });
 };
 
-export const parseDocumentRefs = (documentRefsRaw: any[]): DocumentRef[] => {
+export const parseDocumentRefs = (documentRefsRaw: any[]): Define20.DocumentRef[] => {
     if (!documentRefsRaw) return [];
     // Flatten all documentRef arrays from each object in documentRefsRaw
     const refs = documentRefsRaw.flatMap((obj) => obj.documentRef ?? [obj]);
 
     return refs.map((docRef) => {
-        const result: DocumentRef = { leafId: docRef["$"] && docRef["$"].leafId };
+        const result: Define20.DocumentRef = { leafId: docRef["$"] && docRef["$"].leafId };
         if (docRef["pDFPageRef"]) {
             result.pdfPageRefs = parsePdfPageRefs(docRef["pDFPageRef"]);
         }

@@ -4,27 +4,15 @@
  * Parse ARM 1.0 to TypeScript interfaces
  */
 
-import {
-    AnalysisDataset,
-    AnalysisDatasets,
-    AnalysisResultDisplays20,
-    ResultDisplay20,
-    AnalysisResult20,
-    Documentation20,
-    ProgrammingCode20,
-    ResultDisplay21,
-    AnalysisResult21,
-    AnalysisResultDisplays21,
-    Documentation21,
-    ProgrammingCode21,
-} from "interfaces/arm.10";
+import type { ArmDefine20, ArmDefine21 } from "interfaces/arm.10";
+import type { AnalysisDataset, AnalysisDatasets } from "interfaces/arm.10";
 import { parseTranslatedText } from "parser/define.core";
 import { parseDocumentRefs as parseDocumentRefs20 } from "parser/define.20.core";
 import { parseDocumentRefs as parseDocumentRefs21 } from "parser/define.21.core";
 
 interface ParseAnalysisResultDisplays {
-    (analysisResultDisplayRaw: any, defineVer: "2.0"): AnalysisResultDisplays20["analysisResultDisplays"];
-    (analysisResultDisplayRaw: any, defineVer: "2.1"): AnalysisResultDisplays21["analysisResultDisplays"];
+    (analysisResultDisplayRaw: any, defineVer: "2.0"): ArmDefine20.AnalysisResultDisplays["analysisResultDisplays"];
+    (analysisResultDisplayRaw: any, defineVer: "2.1"): ArmDefine21.AnalysisResultDisplays["analysisResultDisplays"];
 }
 
 export const parseAnalysisResultDisplays: ParseAnalysisResultDisplays = (analysisResultDisplayRaw, defineVer) => {
@@ -39,25 +27,25 @@ export const parseAnalysisResultDisplays: ParseAnalysisResultDisplays = (analysi
 
 interface ParseResultDisplays {
     (resultDisplaysRaw: any[], defineVer: "2.0"): {
-        resultDisplays: Record<string, ResultDisplay20>;
+        resultDisplays: Record<string, ArmDefine20.ResultDisplay>;
         resultDisplayOrder: string[];
     };
     (resultDisplaysRaw: any[], defineVer: "2.1"): {
-        resultDisplays: Record<string, ResultDisplay21>;
+        resultDisplays: Record<string, ArmDefine21.ResultDisplay>;
         resultDisplayOrder: string[];
     };
 }
 
 const parseResultDisplay: ParseResultDisplays = (resultDisplaysRaw: any[], defineVer: "2.0" | "2.1"): any => {
     if (defineVer === "2.0") {
-        const resultDisplays: Record<string, ResultDisplay20> = {};
+        const resultDisplays: Record<string, ArmDefine20.ResultDisplay> = {};
         const resultDisplayOrder: string[] = [];
         resultDisplaysRaw.forEach((resultDisplayRaw) => {
             const { analysisResults, analysisResultOrder } = parseAnalysisResults(
                 resultDisplayRaw["analysisResult"],
                 defineVer
             );
-            const resultDisplay: ResultDisplay20 = {
+            const resultDisplay: ArmDefine20.ResultDisplay = {
                 oid: resultDisplayRaw["$"]["oid"],
                 name: resultDisplayRaw["$"]["name"],
                 description: resultDisplayRaw["description"].map(parseTranslatedText),
@@ -72,14 +60,14 @@ const parseResultDisplay: ParseResultDisplays = (resultDisplaysRaw: any[], defin
         });
         return { resultDisplays, resultDisplayOrder };
     } else if (defineVer === "2.1") {
-        const resultDisplays: Record<string, ResultDisplay21> = {};
+        const resultDisplays: Record<string, ArmDefine21.ResultDisplay> = {};
         const resultDisplayOrder: string[] = [];
         resultDisplaysRaw.forEach((resultDisplayRaw) => {
             const { analysisResults, analysisResultOrder } = parseAnalysisResults(
                 resultDisplayRaw["analysisResult"],
                 defineVer
             );
-            const resultDisplay: ResultDisplay21 = {
+            const resultDisplay: ArmDefine21.ResultDisplay = {
                 oid: resultDisplayRaw["$"]["oid"],
                 name: resultDisplayRaw["$"]["name"],
                 description: resultDisplayRaw["description"].map(parseTranslatedText),
@@ -98,17 +86,17 @@ const parseResultDisplay: ParseResultDisplays = (resultDisplaysRaw: any[], defin
 
 interface ParseAnalysisResults {
     (analysisResultRaw: any, defineVer: "2.0"): {
-        analysisResults: Record<string, AnalysisResult20>;
+        analysisResults: Record<string, ArmDefine20.AnalysisResult>;
         analysisResultOrder: string[];
     };
     (analysisResultRaw: any, defineVer: "2.1"): {
-        analysisResults: Record<string, AnalysisResult21>;
+        analysisResults: Record<string, ArmDefine21.AnalysisResult>;
         analysisResultOrder: string[];
     };
 }
 
 const parseAnalysisResults: ParseAnalysisResults = (analysisResultRaw: any[], defineVer) => {
-    const analysisResults: Record<string, AnalysisResult20 | AnalysisResult21> = {};
+    const analysisResults: Record<string, ArmDefine20.AnalysisResult | ArmDefine21.AnalysisResult> = {};
     const analysisResultOrder: string[] = [];
     analysisResultRaw.forEach((arRaw) => {
         const analysisResult = parseAnalysisResult(arRaw, defineVer);
@@ -118,7 +106,10 @@ const parseAnalysisResults: ParseAnalysisResults = (analysisResultRaw: any[], de
     return { analysisResults, analysisResultOrder };
 };
 
-const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): AnalysisResult20 | AnalysisResult21 => {
+const parseAnalysisResult = (
+    analysisResultRaw: any,
+    defineVer: "2.0" | "2.1"
+): ArmDefine20.AnalysisResult | ArmDefine21.AnalysisResult => {
     const commonAttributes = {
         oid: analysisResultRaw["$"]["oid"],
         parameterOid: analysisResultRaw["$"]["parameterOid"],
@@ -132,14 +123,14 @@ const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): 
         delete commonAttributes.parameterOid;
     }
     if (defineVer === "2.0") {
-        const analysisResult: AnalysisResult20 = {
+        const analysisResult: ArmDefine20.AnalysisResult = {
             ...commonAttributes,
         };
         if (analysisResultRaw["documentation"]) {
             analysisResult.documentation = parseDocumentation(analysisResultRaw["documentation"], defineVer);
         }
         if (analysisResultRaw["programmingCode"]) {
-            const programmingCode: ProgrammingCode20 = {};
+            const programmingCode: ArmDefine20.ProgrammingCode = {};
             if (analysisResultRaw["programmingCode"][0] && analysisResultRaw["programmingCode"][0]["$"]) {
                 if (analysisResultRaw["programmingCode"][0]["$"]["context"]) {
                     programmingCode.context = analysisResultRaw["programmingCode"][0]["$"]["context"];
@@ -155,14 +146,14 @@ const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): 
         }
         return analysisResult;
     } else if (defineVer === "2.1") {
-        const analysisResult: AnalysisResult21 = {
+        const analysisResult: ArmDefine21.AnalysisResult = {
             ...commonAttributes,
         };
         if (analysisResultRaw["documentation"]) {
             analysisResult.documentation = parseDocumentation(analysisResultRaw["documentation"], defineVer);
         }
         if (analysisResultRaw["programmingCode"]) {
-            const programmingCode: ProgrammingCode21 = {};
+            const programmingCode: ArmDefine21.ProgrammingCode = {};
             if (analysisResultRaw["programmingCode"][0] && analysisResultRaw["programmingCode"][0]["$"]) {
                 if (analysisResultRaw["programmingCode"][0]["$"]["context"]) {
                     programmingCode.context = analysisResultRaw["programmingCode"][0]["$"]["context"];
@@ -217,13 +208,16 @@ const parseAnalysisDataset = (analysisDatasetRaw: any): AnalysisDataset => {
 };
 
 interface ParseDocumentation {
-    (documentationRaw: any[], defineVer: "2.0"): Documentation20;
-    (documentationRaw: any[], defineVer: "2.1"): Documentation21;
+    (documentationRaw: any[], defineVer: "2.0"): ArmDefine20.Documentation;
+    (documentationRaw: any[], defineVer: "2.1"): ArmDefine21.Documentation;
 }
 
-const parseDocumentation: ParseDocumentation = (documentationRaw, defineVer): Documentation20 | Documentation21 => {
+const parseDocumentation: ParseDocumentation = (
+    documentationRaw,
+    defineVer
+): ArmDefine20.Documentation | ArmDefine21.Documentation => {
     if (defineVer === "2.0") {
-        const documentation: Documentation20 = {
+        const documentation: ArmDefine20.Documentation = {
             description: documentationRaw[0]["description"].map(parseTranslatedText),
         };
         if (documentationRaw[0]["documentRef"]) {
@@ -232,7 +226,7 @@ const parseDocumentation: ParseDocumentation = (documentationRaw, defineVer): Do
         return documentation;
     }
     if (defineVer === "2.1") {
-        const documentation: Documentation21 = {
+        const documentation: ArmDefine21.Documentation = {
             description: documentationRaw[0]["description"].map(parseTranslatedText),
         };
         if (documentationRaw[0]["documentRef"]) {

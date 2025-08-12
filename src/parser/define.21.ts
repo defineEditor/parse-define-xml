@@ -17,42 +17,19 @@ import {
     parseFormalExpressions,
     parseGlobalVariables,
 } from "parser/define.core";
-import type {
-    Odm,
-    Study,
-    MetaDataVersion,
-    ItemGroupDef,
-    ItemGroupDefClassNames,
-    ItemGroupDefPurpose,
-    ItemDef,
-    ItemDefDataType,
-    ItemRef,
-    ValueListDef,
-    CodeList,
-    CodeListType,
-    CommentDef,
-    MethodDef,
-    Origin,
-    OriginType,
-    Standard,
-    ItemGroupDefSubclassNames,
-    ItemGroupDefSubclass,
-    ItemGroupDefClass,
-    OriginSource,
-    DefineXml,
-} from "interfaces/define.xml.21.d.ts";
-import { ArmDefineXml21 } from "interfaces/arm.10";
+import type { Define21 } from "interfaces/define.xml.21.d.ts";
+import { ArmDefine21 } from "interfaces/arm.10";
 import { parseAnalysisResultDisplays } from "parser/arm.10";
 import { parseDocumentRefs } from "parser/define.21.core";
 
-const parseOrigin = (originRaw: any[]): Origin[] => {
+const parseOrigin = (originRaw: any[]): Define21.Origin[] => {
     return originRaw.map((item) => {
-        const result: Origin = {
-            type: item["$"]["type"] as OriginType,
+        const result: Define21.Origin = {
+            type: item["$"]["type"] as Define21.OriginType,
         };
 
         if (item["$"]["source"]) {
-            result.source = item["$"]["source"] as OriginSource;
+            result.source = item["$"]["source"] as Define21.OriginSource;
         }
         if (item["description"]) {
             result.description = item["description"].map(parseTranslatedText);
@@ -64,16 +41,18 @@ const parseOrigin = (originRaw: any[]): Origin[] => {
     });
 };
 
-const parseCodeLists = (codeListsRaw: any[]): { codeLists: Record<string, CodeList>; codeListsOrder: string[] } => {
-    const codeLists: Record<string, CodeList> = {};
+const parseCodeLists = (
+    codeListsRaw: any[]
+): { codeLists: Record<string, Define21.CodeList>; codeListsOrder: string[] } => {
+    const codeLists: Record<string, Define21.CodeList> = {};
     const codeListsOrder: string[] = [];
     if (!codeListsRaw) return { codeLists, codeListsOrder };
     codeListsRaw.forEach((clRaw) => {
         if (!clRaw["$"]) return;
-        const codeList: CodeList = {
+        const codeList: Define21.CodeList = {
             oid: clRaw["$"]["oid"],
             name: clRaw["$"]["name"],
-            dataType: clRaw["$"]["dataType"] as CodeListType,
+            dataType: clRaw["$"]["dataType"] as Define21.CodeListType,
         };
         if (clRaw["$"]["sASFormatName"]) {
             codeList.sasFormatName = clRaw["$"]["sASFormatName"];
@@ -116,12 +95,12 @@ const parseCodeLists = (codeListsRaw: any[]): { codeLists: Record<string, CodeLi
 
 const parseCommentDefs = (
     commentsRaw: any[]
-): { commentDefs: Record<string, CommentDef>; commentDefsOrder: string[] } => {
-    const commentDefs: Record<string, CommentDef> = {};
+): { commentDefs: Record<string, Define21.CommentDef>; commentDefsOrder: string[] } => {
+    const commentDefs: Record<string, Define21.CommentDef> = {};
     const commentDefsOrder: string[] = [];
     if (!commentsRaw) return { commentDefs, commentDefsOrder };
     commentsRaw.forEach((commentRaw) => {
-        const comment: CommentDef = {
+        const comment: Define21.CommentDef = {
             oid: commentRaw["$"]["oid"],
         };
         if (commentRaw["description"]) {
@@ -136,12 +115,14 @@ const parseCommentDefs = (
     return { commentDefs, commentDefsOrder };
 };
 
-const parseMethodDefs = (methodsRaw: any[]): { methodDefs: Record<string, MethodDef>; methodDefsOrder: string[] } => {
-    const methodDefs: Record<string, MethodDef> = {};
+const parseMethodDefs = (
+    methodsRaw: any[]
+): { methodDefs: Record<string, Define21.MethodDef>; methodDefsOrder: string[] } => {
+    const methodDefs: Record<string, Define21.MethodDef> = {};
     const methodDefsOrder: string[] = [];
     if (!methodsRaw) return { methodDefs, methodDefsOrder };
     methodsRaw.forEach((methodRaw) => {
-        const method: MethodDef = {
+        const method: Define21.MethodDef = {
             oid: methodRaw["$"]["oid"],
             name: methodRaw["$"]["name"],
             type: methodRaw["$"]["type"] as "Computation" | "Imputation",
@@ -161,7 +142,7 @@ const parseMethodDefs = (methodsRaw: any[]): { methodDefs: Record<string, Method
     return { methodDefs, methodDefsOrder };
 };
 
-const parseItemRef = (itemRefRaw: any): ItemRef => {
+const parseItemRef = (itemRefRaw: any): Define21.ItemRef => {
     let mandatory: boolean = false;
     if (itemRefRaw["$"]["mandatory"] === "Yes" || itemRefRaw["$"]["mandatory"] === "No") {
         mandatory = itemRefRaw["$"]["mandatory"] == "Yes" ? true : false;
@@ -170,7 +151,7 @@ const parseItemRef = (itemRefRaw: any): ItemRef => {
             `Invalid value for mandatory. Expected "Yes" or "No", received ${itemRefRaw["$"]["mandatory"]}`
         );
     }
-    const itemRef: ItemRef = {
+    const itemRef: Define21.ItemRef = {
         itemOid: itemRefRaw["$"]["itemOid"],
         mandatory,
     };
@@ -211,15 +192,15 @@ const parseItemRef = (itemRefRaw: any): ItemRef => {
 
 const parseValueLists = (
     valueListsRaw: any[]
-): { valueListDefs: Record<string, ValueListDef>; valueListDefsOrder: string[] } => {
-    const valueLists: Record<string, ValueListDef> = {};
+): { valueListDefs: Record<string, Define21.ValueListDef>; valueListDefsOrder: string[] } => {
+    const valueLists: Record<string, Define21.ValueListDef> = {};
     const valueListDefsOrder: string[] = [];
     if (!valueListsRaw) return { valueListDefs: valueLists, valueListDefsOrder };
     valueListsRaw.forEach((vlRaw) => {
         const { itemRefs, itemRefsOrder } = vlRaw["itemRef"]
             ? parseItemRefs(vlRaw["itemRef"])
             : { itemRefs: {}, itemRefsOrder: [] };
-        const valueList: ValueListDef = {
+        const valueList: Define21.ValueListDef = {
             oid: vlRaw["$"]["oid"],
             itemRefs,
             itemRefsOrder,
@@ -233,8 +214,8 @@ const parseValueLists = (
     return { valueListDefs: valueLists, valueListDefsOrder };
 };
 
-const parseItemRefs = (itemRefsRaw: any[]): { itemRefs: Record<string, ItemRef>; itemRefsOrder: string[] } => {
-    const itemRefs: Record<string, ItemRef> = {};
+const parseItemRefs = (itemRefsRaw: any[]): { itemRefs: Record<string, Define21.ItemRef>; itemRefsOrder: string[] } => {
+    const itemRefs: Record<string, Define21.ItemRef> = {};
     const itemRefsOrder: string[] = [];
     if (!itemRefsRaw) return { itemRefs, itemRefsOrder };
     itemRefsRaw.forEach((itemRefRaw) => {
@@ -246,15 +227,15 @@ const parseItemRefs = (itemRefsRaw: any[]): { itemRefs: Record<string, ItemRef>;
     return { itemRefs, itemRefsOrder };
 };
 
-const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, ItemDef>; itemDefsOrder: string[] } => {
-    const itemDefs: Record<string, ItemDef> = {};
+const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, Define21.ItemDef>; itemDefsOrder: string[] } => {
+    const itemDefs: Record<string, Define21.ItemDef> = {};
     const itemDefsOrder: string[] = [];
     if (!itemDefsRaw) return { itemDefs, itemDefsOrder };
     itemDefsRaw.forEach((itemDefRaw) => {
-        const itemDef: ItemDef = {
+        const itemDef: Define21.ItemDef = {
             oid: itemDefRaw["$"]["oid"],
             name: itemDefRaw["$"]["name"],
-            dataType: itemDefRaw["$"]["dataType"] as ItemDefDataType,
+            dataType: itemDefRaw["$"]["dataType"] as Define21.ItemDefDataType,
         };
         if (itemDefRaw["$"]["length"]) {
             itemDef.length = Number(itemDefRaw["$"]["length"]);
@@ -292,26 +273,26 @@ const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, ItemDef>;
     return { itemDefs, itemDefsOrder };
 };
 
-const parseClass = (classRaw: any): ItemGroupDefClass => {
+const parseClass = (classRaw: any): Define21.ItemGroupDefClass => {
     if (!Array.isArray(classRaw) || !classRaw[0]) {
         throw new Error("Expected class to be a non-empty array");
     }
 
-    const result: ItemGroupDefClass = {
-        name: classRaw[0]["$"]["name"] as ItemGroupDefClassNames,
+    const result: Define21.ItemGroupDefClass = {
+        name: classRaw[0]["$"]["name"] as Define21.ItemGroupDefClassNames,
     };
 
-    const subClasses: ItemGroupDefSubclass[] = [];
+    const subClasses: Define21.ItemGroupDefSubclass[] = [];
 
     if (classRaw[0]["subClass"]) {
         classRaw[0]["subClass"].forEach((subClassRaw: any) => {
-            const subClass: ItemGroupDefSubclass = {
-                name: subClassRaw["$"]["name"] as ItemGroupDefSubclassNames,
+            const subClass: Define21.ItemGroupDefSubclass = {
+                name: subClassRaw["$"]["name"] as Define21.ItemGroupDefSubclassNames,
             };
             if (subClassRaw["$"]["parentClassName"]) {
                 subClass.parentClassName = subClassRaw["$"]["parentClassName"] as
-                    | ItemGroupDefClassNames
-                    | ItemGroupDefSubclassNames;
+                    | Define21.ItemGroupDefClassNames
+                    | Define21.ItemGroupDefSubclassNames;
             }
             subClasses.push(subClass);
         });
@@ -323,8 +304,8 @@ const parseClass = (classRaw: any): ItemGroupDefClass => {
 
 const parseItemGroups = (
     itemGroupsRaw: any[]
-): { itemGroupDefs: Record<string, ItemGroupDef>; itemGroupDefsOrder: string[] } => {
-    const itemGroupDefs: Record<string, ItemGroupDef> = {};
+): { itemGroupDefs: Record<string, Define21.ItemGroupDef>; itemGroupDefsOrder: string[] } => {
+    const itemGroupDefs: Record<string, Define21.ItemGroupDef> = {};
     const itemGroupDefsOrder: string[] = [];
     if (!itemGroupsRaw) return { itemGroupDefs, itemGroupDefsOrder };
     itemGroupsRaw.forEach((igRaw) => {
@@ -337,11 +318,11 @@ const parseItemGroups = (
         } else {
             throw new Error(`Invalid value for repeating. Expected "Yes" or "No", received ${igRaw["$"]["repeating"]}`);
         }
-        const itemGroup: ItemGroupDef = {
+        const itemGroup: Define21.ItemGroupDef = {
             oid: igRaw["$"]["oid"],
             name: igRaw["$"]["name"],
             repeating,
-            purpose: igRaw["$"]["purpose"] as ItemGroupDefPurpose,
+            purpose: igRaw["$"]["purpose"] as Define21.ItemGroupDefPurpose,
             sasDatasetName: igRaw["$"]["sASDatasetName"],
             structure: igRaw["$"]["structure"],
             archiveLocationId: igRaw["$"]["archiveLocationId"],
@@ -374,13 +355,6 @@ const parseItemGroups = (
             itemGroup.domain = igRaw["$"]["domain"];
         }
         if (igRaw["$"]["isReferenceData"]) {
-            /* Convert using approach similar to this:
-            if (item["$"]["extendedValue"] === "Yes") {
-                enumeratedItem.extendedValue = true;
-            } else {
-                throw new Error(`Invalid value for extendedValue. Expected "Yes", received ${item["$"]["extendedValue"]}`);
-            }
-            */
             if (igRaw["$"]["isReferenceData"] === "Yes" || igRaw["$"]["isReferenceData"] === "No") {
                 itemGroup.isReferenceData = igRaw["$"]["isReferenceData"] === "Yes" ? true : false;
             } else {
@@ -408,12 +382,14 @@ const parseItemGroups = (
     return { itemGroupDefs, itemGroupDefsOrder };
 };
 
-const parseStandards = (standardsRaw: any[]): { standards: Record<string, Standard>; standardsOrder: string[] } => {
-    const standards: Record<string, Standard> = {};
+const parseStandards = (
+    standardsRaw: any[]
+): { standards: Record<string, Define21.Standard>; standardsOrder: string[] } => {
+    const standards: Record<string, Define21.Standard> = {};
     const standardsOrder: string[] = [];
     if (!standardsRaw) return { standards, standardsOrder };
     standardsRaw[0]?.standard.forEach((stdRaw: Record<string, any>) => {
-        const standard: Standard = {
+        const standard: Define21.Standard = {
             oid: stdRaw["$"]["oid"],
             name: stdRaw["$"]["name"],
             type: stdRaw["$"]["type"],
@@ -435,8 +411,8 @@ const parseStandards = (standardsRaw: any[]): { standards: Record<string, Standa
 };
 
 interface ParseMetadata {
-    (metadataRaw: any, hasArm: true): ArmDefineXml21["odm"]["study"]["metaDataVersion"];
-    (metadataRaw: any, hasArm?: false): MetaDataVersion;
+    (metadataRaw: any, hasArm: true): ArmDefine21.MetaDataVersion;
+    (metadataRaw: any, hasArm?: false): Define21.MetaDataVersion;
 }
 
 const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean): any => {
@@ -444,7 +420,7 @@ const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean)
     const { itemDefs, itemDefsOrder } = parseItemDefs(metadataRaw["itemDef"]);
     const { standards, standardsOrder } = parseStandards(metadataRaw["standards"]);
 
-    const result: MetaDataVersion = {
+    const result: Define21.MetaDataVersion = {
         oid: metadataRaw["$"]["oid"],
         name: metadataRaw["$"]["name"],
         description: metadataRaw["$"]["description"],
@@ -502,7 +478,7 @@ const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean)
     }
 
     if (hasArm === true) {
-        const resultWithArm: ArmDefineXml21["odm"]["study"]["metaDataVersion"] = {
+        const resultWithArm: ArmDefine21.MetaDataVersion = {
             ...result,
             analysisResultDisplays: parseAnalysisResultDisplays(metadataRaw["analysisResultDisplays"], "2.1"),
         };
@@ -513,20 +489,20 @@ const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean)
 };
 
 interface ParseStudy {
-    (studyRaw: any, hasArm: true): ArmDefineXml21["odm"]["study"];
-    (studyRaw: any, hasArm?: false): Study;
+    (studyRaw: any, hasArm: true): ArmDefine21.DefineXml["odm"]["study"];
+    (studyRaw: any, hasArm?: false): Define21.Study;
 }
 
 const parseStudy: ParseStudy = (studyRaw: any, hasArm?: boolean): any => {
     if (hasArm === true) {
-        const studyWithArm: ArmDefineXml21["odm"]["study"] = {
+        const studyWithArm: ArmDefine21.DefineXml["odm"]["study"] = {
             studyOid: studyRaw["$"]["oid"],
             globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
             metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0], hasArm),
         };
         return studyWithArm;
     } else {
-        const study: Study = {
+        const study: Define21.Study = {
             studyOid: studyRaw["$"]["oid"],
             globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
             metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
@@ -536,18 +512,18 @@ const parseStudy: ParseStudy = (studyRaw: any, hasArm?: boolean): any => {
 };
 
 interface ParseOdm {
-    (odmRaw: any, hasArm: true): ArmDefineXml21["odm"];
-    (odmRaw: any, hasArm?: false): Odm;
+    (odmRaw: any, hasArm: true): ArmDefine21.DefineXml["odm"];
+    (odmRaw: any, hasArm?: false): Define21.Odm;
 }
 
 const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
-    let study: Study | ArmDefineXml21["odm"]["study"];
+    let study: Define21.Study | ArmDefine21.DefineXml["odm"]["study"];
     if (hasArm === true) {
         study = parseStudy(odmRaw["study"][0], true);
     } else {
         study = parseStudy(odmRaw["study"][0]);
     }
-    const result: Odm = {
+    const result: Define21.Odm = {
         xmlns: odmRaw["$"]["xmlns"] as "http://www.cdisc.org/ns/odm/v1.3",
         xmlns_def: odmRaw["$"]["xmlns:def"] as "http://www.cdisc.org/ns/def/v2.1",
         xsi_schemaLocation: odmRaw["$"]["xsi:schemaLocation"],
@@ -577,8 +553,8 @@ const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
         result.xmlns_xsi = odmRaw["$"]["xmlns:xsi"] as "http://www.w3.org/2001/XMLSchema-instance";
     }
     if (hasArm === true) {
-        const resultWithArm: ArmDefineXml21["odm"] = {
-            ...(result as ArmDefineXml21["odm"]),
+        const resultWithArm: ArmDefine21.DefineXml["odm"] = {
+            ...(result as ArmDefine21.DefineXml["odm"]),
             xmlns_arm: odmRaw["$"]["xmlns:arm"] as "http://www.cdisc.org/ns/arm/v1.0",
         };
         return resultWithArm;
@@ -591,12 +567,12 @@ const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
  * Main parser function for Define-XML 2.1
  */
 interface ParseDefineXml {
-    (xmlString: string, hasArm?: false): Promise<DefineXml>;
-    (xmlString: string, hasArm?: true): Promise<ArmDefineXml21>;
+    (xmlString: string, hasArm?: false): Promise<Define21.DefineXml>;
+    (xmlString: string, hasArm?: true): Promise<ArmDefine21.DefineXml>;
 }
 const parseDefineXml: ParseDefineXml = async (xmlString: string, hasArm?: boolean): Promise<any> => {
     // Parse XML string into object using xml2js
-    const defineXml: Partial<DefineXml> = {
+    const defineXml: Partial<Define21.DefineXml> = {
         xml: {},
         styleSheet: {},
     };
@@ -647,7 +623,13 @@ const parseDefineXml: ParseDefineXml = async (xmlString: string, hasArm?: boolea
     defineXml.odm =
         hasArm === true ? parseOdm(parsedXmlUpdated["odm"], true) : parseOdm(parsedXmlUpdated["odm"], false);
 
-    return defineXml as DefineXml;
+    if (hasArm === true) {
+        defineXml.odm = parseOdm(parsedXmlUpdated["odm"], true) as ArmDefine21.DefineXml["odm"];
+        return defineXml as ArmDefine21.DefineXml;
+    } else {
+        defineXml.odm = parseOdm(parsedXmlUpdated["odm"]) as Define21.DefineXml["odm"];
+        return defineXml as Define21.DefineXml;
+    }
 };
 
 export default parseDefineXml;
