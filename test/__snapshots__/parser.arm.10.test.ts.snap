@@ -61,7 +61,14 @@ exports[`ARM 1.0 for Define-XML 2.0 Parser ARM Snapshots should match result dis
         ],
       },
       "oid": "AR.Table_14-5.02.R.1",
-      "programmingCode": {},
+      "programmingCode": {
+        "context": "SAS version 9.2",
+        "documents": [
+          {
+            "leafId": "LF.at14-5-02.sas",
+          },
+        ],
+      },
     },
   },
   "description": [

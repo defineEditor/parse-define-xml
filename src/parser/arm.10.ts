@@ -145,16 +145,16 @@ const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): 
         }
         if (analysisResultRaw["programmingCode"]) {
             const programmingCode: ProgrammingCode20 = {};
-            if (analysisResultRaw["programmingCode"]["$"]) {
-                if (analysisResultRaw["programmingCode"]["$"]["context"]) {
-                    programmingCode.context = analysisResultRaw["programmingCode"]["$"]["context"];
+            if (analysisResultRaw["programmingCode"][0] && analysisResultRaw["programmingCode"][0]["$"]) {
+                if (analysisResultRaw["programmingCode"][0]["$"]["context"]) {
+                    programmingCode.context = analysisResultRaw["programmingCode"][0]["$"]["context"];
                 }
-                if (analysisResultRaw["programmingCode"]["$"]["code"]) {
-                    programmingCode.code = analysisResultRaw["programmingCode"]["$"]["code"];
+                if (analysisResultRaw["programmingCode"][0]["code"]) {
+                    programmingCode.code = analysisResultRaw["programmingCode"][0]["code"];
                 }
             }
-            if (analysisResultRaw["programmingCode"]["documentRef"]) {
-                programmingCode.documents = parseDocumentRefs20(analysisResultRaw["programmingCode"]["documentRef"]);
+            if (analysisResultRaw["programmingCode"][0]["documentRef"]) {
+                programmingCode.documents = parseDocumentRefs20(analysisResultRaw["programmingCode"][0]["documentRef"]);
             }
             analysisResult.programmingCode = programmingCode;
         }
@@ -168,16 +168,16 @@ const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): 
         }
         if (analysisResultRaw["programmingCode"]) {
             const programmingCode: ProgrammingCode21 = {};
-            if (analysisResultRaw["programmingCode"]["$"]) {
-                if (analysisResultRaw["programmingCode"]["$"]["context"]) {
-                    programmingCode.context = analysisResultRaw["programmingCode"]["$"]["context"];
+            if (analysisResultRaw["programmingCode"][0] && analysisResultRaw["programmingCode"][0]["$"]) {
+                if (analysisResultRaw["programmingCode"][0]["$"]["context"]) {
+                    programmingCode.context = analysisResultRaw["programmingCode"][0]["$"]["context"];
                 }
-                if (analysisResultRaw["programmingCode"]["$"]["code"]) {
-                    programmingCode.code = analysisResultRaw["programmingCode"]["$"]["code"];
+                if (analysisResultRaw["programmingCode"][0]["$"]["code"]) {
+                    programmingCode.code = analysisResultRaw["programmingCode"][0]["code"];
                 }
             }
-            if (analysisResultRaw["programmingCode"]["documentRef"]) {
-                programmingCode.documents = parseDocumentRefs21(analysisResultRaw["programmingCode"]["documentRef"]);
+            if (analysisResultRaw["programmingCode"][0]["documentRef"]) {
+                programmingCode.documents = parseDocumentRefs21(analysisResultRaw["programmingCode"][0]["documentRef"]);
             }
             analysisResult.programmingCode = programmingCode;
         }
