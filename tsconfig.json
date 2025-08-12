@@ -22,7 +22,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": false,
-    "outDir": "build",
+    "outDir": "dist",
   },
-  "include": ["src", "test"]
+  "include": ["src"]
 }

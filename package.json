@@ -1,8 +1,32 @@
 {
+    "name": "parse-define-xml",
+    "version": "0.1",
+    "description": "Parse Define-XML files",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "keywords": [
+        "cdisc",
+        "define-xml"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/defineEditor/parse-define-xml.git"
+    },
+    "author": "Dmitry Kolosov",
+    "license": "MIT",
+    "scripts": {
+        "test": "jest --coverage",
+        "build": "tsc",
+        "lint": "eslint . --ignore-pattern 'dist'"
+    },
     "jest": {
         "moduleDirectories": [
             "node_modules",
-            "src"
+            "test",
+            "."
         ],
         "moduleFileExtensions": [
             "js",
@@ -10,12 +34,16 @@
             "json"
         ],
         "moduleNameMapper": {
-            "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/.erb/mocks/fileMock.js",
-            "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+            "^interfaces/(.*)$": "<rootDir>/src/interfaces/$1",
+            "^parser/(.*)$": "<rootDir>/src/parser/$1"
         },
         "transform": {
-            "\\.(ts|tsx)$": "ts-jest"
-        }
+            "\\.(ts|tsx)$": ["ts-jest", {}],
+            "^.+\\.tsx?$": ["ts-jest", {}]
+        },
+        "testPathIgnorePatterns": [
+            "<rootDir>/dist/"
+        ]
     },
     "devDependencies": {
         "@eslint/js": "^9.32.0",
@@ -28,9 +56,6 @@
         "@types/xml2js": "^0.4.14",
         "jest": "^30.0.5",
         "ts-jest": "^29.4.1"
-    },
-    "scripts": {
-        "test": "jest"
     },
     "dependencies": {
         "xml2js": "^0.6.2"

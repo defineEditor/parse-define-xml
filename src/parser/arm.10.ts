@@ -172,7 +172,7 @@ const parseAnalysisResult = (analysisResultRaw: any, defineVer: "2.0" | "2.1"): 
                 if (analysisResultRaw["programmingCode"][0]["$"]["context"]) {
                     programmingCode.context = analysisResultRaw["programmingCode"][0]["$"]["context"];
                 }
-                if (analysisResultRaw["programmingCode"][0]["$"]["code"]) {
+                if (analysisResultRaw["programmingCode"][0]["code"]) {
                     programmingCode.code = analysisResultRaw["programmingCode"][0]["code"];
                 }
             }

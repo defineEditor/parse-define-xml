@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`ARM 1.0 for Define-XML 2.0 Parser ARM Snapshots should match result display snapshot 1`] = `
+exports[`ARM 1.0 for Define-XML 2.0 Parser ARM Snapshots for Define-XML 2.0 should match result display snapshot 1`] = `
 {
   "analysisResultOrder": [
     "AR.Table_14-5.02.R.1",
@@ -90,5 +90,68 @@ exports[`ARM 1.0 for Define-XML 2.0 Parser ARM Snapshots should match result dis
   ],
   "name": "Table 14-5.02",
   "oid": "RD.Table_14-5.02",
+}
+`;
+
+exports[`ARM 1.0 for Define-XML 2.0 Parser ARM Snapshots for Define-XML 2.1 should match result display snapshot 1`] = `
+{
+  "analysisResultOrder": [
+    "AR.Table14.3.01.AR.0000",
+  ],
+  "analysisResults": {
+    "AR.Table14.3.01.AR.0000": {
+      "analysisDatasets": {
+        "analysisDatasets": {
+          "IG.ADADAS": {
+            "analysisVariables": [
+              "IT.ADADAS.AVAL",
+              "IT.ADADAS.CHG",
+            ],
+            "itemGroupOid": "IG.ADADAS",
+            "whereClauseRefs": [
+              "WC.ADADAS.PARAMCD.EQ.ADADAS.AVISITN.EQ.ADADAS.EFFFL.EQ.abd4110892ed05cc6a32a2725fdb73b615402413",
+            ],
+          },
+        },
+        "analysisDatasetsOrder": [
+          "IG.ADADAS",
+        ],
+      },
+      "analysisPurpose": "PRIMARY OUTCOME MEASURE",
+      "analysisReason": "SPECIFIED IN PROTOCOL",
+      "description": [
+        {
+          "value": "Dose response analysis for ADAS-Cog changes from Baseline",
+        },
+      ],
+      "documentation": {
+        "description": [
+          {
+            "value": "Accordingly, the dose response for the change from baseline at Week 24,
+adjusted for site and baseline score is not statistically significantly different from 0.
+Pairwise comparisons among the treatment groups are also presented.",
+          },
+        ],
+      },
+      "oid": "AR.Table14.3.01.AR.0000",
+      "programmingCode": {
+        "code": [
+          "proc glm data= adadas;
+where EFFFL01 = 'Y' and ANL01FL = "Y" and AVISIT = "Week 24" and PARAMCD ='ACTOT';
+class SITEGR1;
+model chg = TRTPN SITEGR1;
+run;",
+        ],
+        "context": "SAS Version 9.4",
+      },
+    },
+  },
+  "description": [
+    {
+      "value": "Primary Endpoint Analysis: ADAS Cog (11) - Change from Baseline to Week 24 - LOCF",
+    },
+  ],
+  "name": "Table14.3.01",
+  "oid": "RD.Table14.3.01",
 }
 `;
