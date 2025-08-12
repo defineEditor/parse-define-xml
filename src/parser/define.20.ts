@@ -32,25 +32,13 @@ import type {
     FormalExpression,
     Origin,
     OriginType,
-    DocumentRef,
-    PdfPageRef,
-    PdfPageRefType,
     Leaf,
-    TranslatedText,
     Alias,
     DefineXml,
 } from "interfaces/define.xml.20.d.ts";
-
-const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
-    const text = translatedTextRaw.translatedText[0];
-    const translatedText: TranslatedText = {
-        value: text.value || text,
-    };
-    if (text["$"] && text["$"]["xml:lang"]) {
-        translatedText.xml_lang = text["$"]["xml:lang"];
-    }
-    return translatedText;
-};
+import { ArmDefineXml20 } from "interfaces/arm.10";
+import { parseAnalysisResultDisplays } from "parser/arm.10";
+import { parseTranslatedText, parseDocumentRefs } from "parser/define.20.core";
 
 const parseAliases = (aliasesRaw: any[]): Alias[] => {
     return aliasesRaw.map((aliasRaw) => ({
@@ -81,40 +69,6 @@ const parseLeafs = (leafsRaw: any[]): { leafs: Record<string, Leaf>; leafsOrder:
     });
 
     return { leafs, leafsOrder };
-};
-
-const parsePdfPageRefs = (pdfPageRefsRaw: any[]): PdfPageRef[] => {
-    // There are no PDF page references
-    if (!pdfPageRefsRaw) return [];
-
-    return pdfPageRefsRaw.map((ref) => {
-        const result: PdfPageRef = {
-            type: ref["$"]["type"] as PdfPageRefType,
-            pageRefs: ref["$"]["pageRefs"],
-        };
-        if (ref["$"]["firstPage"]) {
-            result.firstPage = Number(ref["$"]["firstPage"]);
-        }
-        if (ref["$"]["lastPage"]) {
-            result.lastPage = Number(ref["$"]["lastPage"]);
-        }
-
-        return result;
-    });
-};
-
-const parseDocumentRefs = (documentRefsRaw: any[]): DocumentRef[] => {
-    if (!documentRefsRaw) return [];
-    // Flatten all documentRef arrays from each object in documentRefsRaw
-    const refs = documentRefsRaw.flatMap((obj) => obj.documentRef ?? [obj]);
-
-    return refs.map((docRef) => {
-        const result: DocumentRef = { leafId: docRef["$"] && docRef["$"].leafId };
-        if (docRef["pDFPageRef"]) {
-            result.pdfPageRefs = parsePdfPageRefs(docRef["pDFPageRef"]);
-        }
-        return result;
-    });
 };
 
 const parseOrigin = (originRaw: any): Origin => {
@@ -485,7 +439,12 @@ const parseItemGroups = (
     return { itemGroupDefs, itemGroupDefsOrder };
 };
 
-const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
+interface ParseMetadata {
+    (metadataRaw: any, hasArm: true): ArmDefineXml20["odm"]["study"]["metaDataVersion"];
+    (metadataRaw: any, hasArm?: false): MetaDataVersion;
+}
+
+const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean): any => {
     const { itemGroupDefs, itemGroupDefsOrder } = parseItemGroups(metadataRaw["itemGroupDef"]);
     const { itemDefs, itemDefsOrder } = parseItemDefs(metadataRaw["itemDef"]);
 
@@ -543,7 +502,15 @@ const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
         result.leafsOrder = leafsOrder;
     }
 
-    return result;
+    if (hasArm === true) {
+        const resultWithArm: ArmDefineXml20["odm"]["study"]["metaDataVersion"] = {
+            ...result,
+            analysisResultDisplays: parseAnalysisResultDisplays(metadataRaw["analysisResultDisplays"], "2.0"),
+        };
+        return resultWithArm;
+    } else {
+        return result;
+    }
 };
 
 const parseGlobalVariables = (globalVariablesRaw: any): GlobalVariables => ({
@@ -552,14 +519,42 @@ const parseGlobalVariables = (globalVariablesRaw: any): GlobalVariables => ({
     protocolName: globalVariablesRaw["protocolName"][0],
 });
 
-const parseStudy = (studyRaw: any): Study => ({
-    studyOid: studyRaw["$"]["oid"],
-    globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
-    metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
-});
+interface ParseStudy {
+    (studyRaw: any, hasArm: true): ArmDefineXml20["odm"]["study"];
+    (studyRaw: any, hasArm?: false): Study;
+}
 
-const parseOdm = (odmRaw: any): Odm => {
-    const result: Odm = {
+const parseStudy: ParseStudy = (studyRaw: any, hasArm?: boolean): any => {
+    if (hasArm === true) {
+        const studyWithArm: ArmDefineXml20["odm"]["study"] = {
+            studyOid: studyRaw["$"]["oid"],
+            globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
+            metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0], hasArm),
+        };
+        return studyWithArm;
+    } else {
+        const study: Study = {
+            studyOid: studyRaw["$"]["oid"],
+            globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
+            metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
+        };
+        return study;
+    }
+};
+
+interface ParseOdm {
+    (odmRaw: any, hasArm: true): ArmDefineXml20["odm"];
+    (odmRaw: any, hasArm?: false): Odm;
+}
+
+const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
+    let study: Study | ArmDefineXml20["odm"]["study"];
+    if (hasArm === true) {
+        study = parseStudy(odmRaw["study"][0], true);
+    } else {
+        study = parseStudy(odmRaw["study"][0]);
+    }
+    const result: Odm | ArmDefineXml20["odm"] = {
         xmlns: odmRaw["$"]["xmlns"] as "http://www.cdisc.org/ns/odm/v1.3",
         xmlns_def: odmRaw["$"]["xmlns:def"] as "http://www.cdisc.org/ns/def/v2.0",
         xsi_schemaLocation: odmRaw["$"]["xsi:schemaLocation"],
@@ -567,7 +562,7 @@ const parseOdm = (odmRaw: any): Odm => {
         fileType: "Snapshot",
         fileOid: odmRaw["$"]["fileOid"],
         creationDateTime: odmRaw["$"]["creationDateTime"],
-        study: parseStudy(odmRaw["study"][0]),
+        study,
     };
     if (odmRaw["$"]["asOfDateTime"]) {
         result.asOfDateTime = odmRaw["$"]["asOfDateTime"];
@@ -587,13 +582,25 @@ const parseOdm = (odmRaw: any): Odm => {
     if (odmRaw["$"]["xmlns:xsi"]) {
         result.xmlns_xsi = odmRaw["$"]["xmlns:xsi"] as "http://www.w3.org/2001/XMLSchema-instance";
     }
-    return result;
+    if (hasArm === true) {
+        const resultWithArm: ArmDefineXml20["odm"] = {
+            ...(result as ArmDefineXml20["odm"]),
+            xmlns_arm: odmRaw["$"]["xmlns:arm"] as "http://www.cdisc.org/ns/arm/v1.0",
+        };
+        return resultWithArm;
+    } else {
+        return result;
+    }
 };
 
 /**
  * Main parser function for Define-XML 2.0
  */
-const parseDefineXml = async (xmlString: string): Promise<DefineXml> => {
+interface ParseDefineXml {
+    (xmlString: string, hasArm?: false): Promise<DefineXml>;
+    (xmlString: string, hasArm?: true): Promise<ArmDefineXml20>;
+}
+const parseDefineXml: ParseDefineXml = async (xmlString: string, hasArm?: boolean): Promise<any> => {
     // Parse XML string into object using xml2js
     const defineXml: Partial<DefineXml> = {
         xml: {},
@@ -643,7 +650,8 @@ const parseDefineXml = async (xmlString: string): Promise<DefineXml> => {
         throw new Error("Invalid Define-XML structure: missing ODM root element");
     }
 
-    defineXml.odm = parseOdm(parsedXmlUpdated["odm"]);
+    defineXml.odm =
+        hasArm === true ? parseOdm(parsedXmlUpdated["odm"], true) : parseOdm(parsedXmlUpdated["odm"], false);
 
     return defineXml as DefineXml;
 };

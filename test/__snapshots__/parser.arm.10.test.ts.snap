@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ARM 1.0 for Define-XML 2.0 Parser ARM Snapshots should match result display snapshot 1`] = `
+{
+  "analysisResultOrder": [
+    "AR.Table_14-5.02.R.1",
+  ],
+  "analysisResults": {
+    "AR.Table_14-5.02.R.1": {
+      "analysisDatasets": {
+        "analysisDatasets": {
+          "IG.ADAE": {
+            "analysisVariables": [
+              "IT.ADAE.AEBODSYS",
+              "IT.ADAE.AEDECOD",
+            ],
+            "itemGroupOid": "IG.ADAE",
+            "whereClauseRefs": [
+              "WC.Table_14-5.02.R.1.ADAE",
+            ],
+          },
+          "IG.ADSL": {
+            "itemGroupOid": "IG.ADSL",
+            "whereClauseRefs": [
+              "WC.Table_14-5.02.R.1.ADSL",
+            ],
+          },
+        },
+        "analysisDatasetsOrder": [
+          "IG.ADAE",
+          "IG.ADSL",
+        ],
+        "commentOid": "COM.JOIN-ADSL-ADAE",
+      },
+      "analysisPurpose": "PRIMARY OUTCOME MEASURE",
+      "analysisReason": "SPECIFIED IN SAP",
+      "description": [
+        {
+          "value": "Incidence of Treatment Emergent Serious Adverse Events by Treatment Group",
+          "xml_lang": "en",
+        },
+      ],
+      "documentation": {
+        "description": [
+          {
+            "value": "Unique count of subjects that experienced an Adverse Event by Preferred Term, System Organ Class, and Treatment Group and percentages based on the number of subjects in the safety population within each treatment group. The total number of times an event occurred was recorded by Preferred Term, System Organ Class, and Treatment Group. Fisher’s exact test was used for treatment comparison of event rates.
+                ",
+            "xml_lang": "en",
+          },
+        ],
+        "documents": [
+          {
+            "leafId": "LF.SAP-SEC-11.2",
+            "pdfPageRefs": [
+              {
+                "pageRefs": "5",
+                "type": "PhysicalRef",
+              },
+            ],
+          },
+        ],
+      },
+      "oid": "AR.Table_14-5.02.R.1",
+      "programmingCode": {},
+    },
+  },
+  "description": [
+    {
+      "value": "Incidence of Treatment Emergent Serious Adverse Events by Treatment Group",
+      "xml_lang": "en",
+    },
+  ],
+  "documents": [
+    {
+      "leafId": "LF.Table-14-5.02",
+      "pdfPageRefs": [
+        {
+          "pageRefs": "3",
+          "type": "PhysicalRef",
+        },
+      ],
+    },
+  ],
+  "name": "Table 14-5.02",
+  "oid": "RD.Table_14-5.02",
+}
+`;

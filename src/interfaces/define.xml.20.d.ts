@@ -49,10 +49,6 @@ export interface Origin {
     documentRefs?: DocumentRef[];
 }
 
-export interface WhereClauseRef {
-    whereClauseOid: string;
-}
-
 export interface WhereClauseDef {
     oid: string;
     commentOid?: string;
