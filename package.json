@@ -18,7 +18,8 @@
     "author": "Dmitry Kolosov",
     "license": "MIT",
     "scripts": {
-        "test": "jest --coverage",
+        "test": "jest",
+        "coverage": "jest --coverage",
         "build": "tsc",
         "release": "npm run lint && npm run test && npm run build && npm publish",
         "lint": "eslint . --ignore-pattern 'dist'"
