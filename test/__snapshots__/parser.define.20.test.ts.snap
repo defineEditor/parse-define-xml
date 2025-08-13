@@ -704,3 +704,17 @@ exports[`Define-XML 2.0 Parser SDTM Snapshots should match method MT.USUBJID sna
   "type": "Computation",
 }
 `;
+
+exports[`Define-XML 2.0 Parser should return stylesheet information 1`] = `
+{
+  "href": "../stylesheets/define2-0-0.xsl",
+  "type": "text/xsl",
+}
+`;
+
+exports[`Define-XML 2.0 Parser should return xml information 1`] = `
+{
+  "encoding": "UTF-8",
+  "version": "1.0",
+}
+`;

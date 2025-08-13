@@ -6,244 +6,47 @@
 
 import * as xml2js from "xml2js";
 import { convertAttributeNameToLowerCamelCase, removeNamespaces } from "parser/utils";
-import type {
-    Odm,
-    Study,
-    GlobalVariables,
-    MetaDataVersion,
-    ItemGroupDef,
-    ItemGroupDefClassNames,
-    ItemGroupDefPurpose,
-    ItemDef,
-    ItemDefDataType,
-    ItemRef,
-    ValueListDef,
-    WhereClauseDef,
-    RangeCheck,
-    Comparator,
-    SoftHard,
-    CodeList,
-    CodeListType,
-    EnumeratedItem,
-    CodeListItem,
-    ExternalCodeList,
-    CommentDef,
-    MethodDef,
-    FormalExpression,
-    Origin,
-    OriginType,
-    DocumentRef,
-    PdfPageRef,
-    PdfPageRefType,
-    Leaf,
-    TranslatedText,
-    Alias,
-} from "interfaces/define.xml.20.d.ts";
+import {
+    parseTranslatedText,
+    parseAliases,
+    parseLeafs,
+    parseWhereClauses,
+    parseEnumeratedItems,
+    parseCodeListItems,
+    parseExternalCodeList,
+    parseFormalExpressions,
+    parseGlobalVariables,
+} from "parser/define.core";
+import type { Define20 } from "interfaces/define.xml.20";
+import { ArmDefine20 } from "interfaces/arm.10";
+import { parseAnalysisResultDisplays } from "parser/arm.10";
+import { parseDocumentRefs } from "parser/define.20.core";
 
-const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
-    const text = translatedTextRaw.translatedText[0];
-    const translatedText: TranslatedText = {
-        value: text.value || text,
+const parseOrigin = (originRaw: any): Define20.Origin => {
+    const result: Define20.Origin = {
+        type: originRaw["$"]["type"] as Define20.OriginType,
     };
-    if (text["$"] && text["$"]["xml:lang"]) {
-        translatedText.xml_lang = text["$"]["xml:lang"];
-    }
-    return translatedText;
-};
-
-const parseAliases = (aliasesRaw: any[]): Alias[] => {
-    return aliasesRaw.map((aliasRaw) => ({
-        context: aliasRaw["$"]["context"],
-        name: aliasRaw["$"]["name"],
-    }));
-};
-
-const parseLeafs = (leafsRaw: any[]): { leafs: Record<string, Leaf>; leafsOrder: string[] } => {
-    const leafs: Record<string, Leaf> = {};
-    const leafsOrder: string[] = [];
-
-    // If there are no leafs, return empty object and array
-    if (!leafsRaw) return { leafs, leafsOrder };
-
-    leafsRaw.forEach((leafRaw) => {
-        // If the leaf does not have attributes, skip it
-        if (!leafRaw["$"]) return;
-
-        const leaf: Leaf = {
-            id: leafRaw["$"]["id"],
-            xlink_href: leafRaw["$"]["xlink:href"],
-            title: leafRaw["title"][0],
-        };
-
-        leafs[leaf.id] = leaf;
-        leafsOrder.push(leaf.id);
-    });
-
-    return { leafs, leafsOrder };
-};
-
-const parsePdfPageRefs = (pdfPageRefsRaw: any[]): PdfPageRef[] => {
-    // There are no PDF page references
-    if (!pdfPageRefsRaw) return [];
-
-    return pdfPageRefsRaw.map((ref) => {
-        const result: PdfPageRef = {
-            type: ref["$"]["type"] as PdfPageRefType,
-            pageRefs: ref["$"]["pageRefs"],
-        };
-        if (ref["$"]["firstPage"]) {
-            result.firstPage = Number(ref["$"]["firstPage"]);
-        }
-        if (ref["$"]["lastPage"]) {
-            result.lastPage = Number(ref["$"]["lastPage"]);
-        }
-
-        return result;
-    });
-};
-
-const parseDocumentRefs = (documentRefsRaw: any[]): DocumentRef[] => {
-    if (!documentRefsRaw) return [];
-    // Flatten all documentRef arrays from each object in documentRefsRaw
-    const refs = documentRefsRaw.flatMap((obj) => obj.documentRef ?? [obj]);
-
-    return refs.map((docRef) => {
-        const result: DocumentRef = { leafId: docRef["$"] && docRef["$"].leafId };
-        if (docRef["pDFPageRef"]) {
-            result.pdfPageRefs = parsePdfPageRefs(docRef["pDFPageRef"]);
-        }
-        return result;
-    });
-};
-
-const parseOrigin = (originRaw: any): Origin => {
-    const result: Origin = {
-        type: originRaw["$"]["type"] as OriginType,
-    };
-
     if (originRaw["description"]) {
         result.description = originRaw["description"].map(parseTranslatedText);
     }
     if (originRaw["documentRef"]) {
         result.documentRefs = parseDocumentRefs(originRaw["documentRef"]);
     }
-
     return result;
 };
 
-const parseCheckValues = (checkValuesRaw: any[]): string[] => {
-    if (!checkValuesRaw) return [];
-    return checkValuesRaw.map((cv) => cv["_"] || cv);
-};
-
-const parseRangeChecks = (rangeChecksRaw: any[]): RangeCheck[] => {
-    if (!rangeChecksRaw) return [];
-    return rangeChecksRaw.map((rc) => ({
-        comparator: rc["$"]["comparator"] as Comparator,
-        softHard: rc["$"]["softHard"] as SoftHard,
-        itemOid: rc["$"]["itemOid"],
-        checkValues: rc["checkValue"] ? parseCheckValues(rc["checkValue"]) : [],
-    }));
-};
-
-const parseWhereClauses = (
-    whereClausesRaw: any[]
-): { whereClauseDefs: Record<string, WhereClauseDef>; whereClauseDefsOrder: string[] } => {
-    const whereClauseDefs: Record<string, WhereClauseDef> = {};
-    const whereClauseDefsOrder: string[] = [];
-    if (!whereClausesRaw) return { whereClauseDefs, whereClauseDefsOrder };
-    whereClausesRaw.forEach((wcRaw) => {
-        if (!wcRaw["$"]) return;
-        const whereClause: WhereClauseDef = {
-            oid: wcRaw["$"]["oid"],
-            rangeChecks: wcRaw["rangeCheck"] ? parseRangeChecks(wcRaw["rangeCheck"]) : [],
-        };
-        if (wcRaw["$"]["commentOid"]) {
-            whereClause.commentOid = wcRaw["$"]["commentOid"];
-        }
-        whereClauseDefs[whereClause.oid] = whereClause;
-        whereClauseDefsOrder.push(whereClause.oid);
-    });
-    return { whereClauseDefs, whereClauseDefsOrder };
-};
-
-const parseEnumeratedItems = (enumeratedItemsRaw: any[]): EnumeratedItem[] => {
-    if (!enumeratedItemsRaw) return [];
-    return enumeratedItemsRaw.map((item) => {
-        const enumeratedItem: EnumeratedItem = {
-            codedValue: item["$"]["codedValue"],
-        };
-        if (item["$"]["rank"]) {
-            enumeratedItem.rank = Number(item["$"]["rank"]);
-        }
-        if (item["$"]["orderNumber"]) {
-            enumeratedItem.orderNumber = Number(item["$"]["orderNumber"]);
-        }
-        if (item["$"]["extendedValue"]) {
-            if (item["$"]["extendedValue"] !== "Yes") {
-                throw new Error(`Invalid value for EnumeratedItem.extendedValue: ${item["$"]["extendedValue"]}`);
-            } else {
-                enumeratedItem.extendedValue = true;
-            }
-        }
-        if (item["alias"]) {
-            enumeratedItem.alias = parseAliases(item["alias"]);
-        }
-        return enumeratedItem;
-    });
-};
-
-const parseCodeListItems = (codeListItemsRaw: any[]): CodeListItem[] => {
-    if (!codeListItemsRaw) return [];
-    return codeListItemsRaw.map((item) => {
-        const codeListItem: CodeListItem = {
-            codedValue: item["$"]["codedValue"],
-            decode: item["decode"] ? item["decode"].map(parseTranslatedText) : [],
-        };
-        if (item["$"]["rank"]) {
-            codeListItem.rank = Number(item["$"]["rank"]);
-        }
-        if (item["$"]["orderNumber"]) {
-            codeListItem.orderNumber = Number(item["$"]["orderNumber"]);
-        }
-        if (item["$"]["extendedValue"]) {
-            if (item["$"]["extendedValue"] !== "Yes") {
-                throw new Error(`Invalid value for EnumeratedItem.extendedValue: ${item["$"]["extendedValue"]}`);
-            } else {
-                codeListItem.extendedValue = true;
-            }
-        }
-        if (item["alias"]) {
-            codeListItem.alias = parseAliases(item["alias"]);
-        }
-        return codeListItem;
-    });
-};
-
-const parseExternalCodeList = (externalCodeListRaw: any): ExternalCodeList => {
-    const result: ExternalCodeList = {
-        dictionary: externalCodeListRaw["$"]["dictionary"],
-        version: externalCodeListRaw["$"]["version"],
-    };
-    if (externalCodeListRaw["$"]["ref"]) {
-        result.ref = externalCodeListRaw["$"]["ref"];
-    }
-    if (externalCodeListRaw["$"]["href"]) {
-        result.href = externalCodeListRaw["$"]["href"];
-    }
-    return result;
-};
-
-const parseCodeLists = (codeListsRaw: any[]): { codeLists: Record<string, CodeList>; codeListsOrder: string[] } => {
-    const codeLists: Record<string, CodeList> = {};
+const parseCodeLists = (
+    codeListsRaw: any[]
+): { codeLists: Record<string, Define20.CodeList>; codeListsOrder: string[] } => {
+    const codeLists: Record<string, Define20.CodeList> = {};
     const codeListsOrder: string[] = [];
     if (!codeListsRaw) return { codeLists, codeListsOrder };
     codeListsRaw.forEach((clRaw) => {
         if (!clRaw["$"]) return;
-        const codeList: CodeList = {
+        const codeList: Define20.CodeList = {
             oid: clRaw["$"]["oid"],
             name: clRaw["$"]["name"],
-            dataType: clRaw["$"]["dataType"] as CodeListType,
+            dataType: clRaw["$"]["dataType"] as Define20.CodeListType,
         };
         if (clRaw["$"]["sASFormatName"]) {
             codeList.sasFormatName = clRaw["$"]["sASFormatName"];
@@ -268,12 +71,12 @@ const parseCodeLists = (codeListsRaw: any[]): { codeLists: Record<string, CodeLi
 
 const parseCommentDefs = (
     commentsRaw: any[]
-): { commentDefs: Record<string, CommentDef>; commentDefsOrder: string[] } => {
-    const commentDefs: Record<string, CommentDef> = {};
+): { commentDefs: Record<string, Define20.CommentDef>; commentDefsOrder: string[] } => {
+    const commentDefs: Record<string, Define20.CommentDef> = {};
     const commentDefsOrder: string[] = [];
     if (!commentsRaw) return { commentDefs, commentDefsOrder };
     commentsRaw.forEach((commentRaw) => {
-        const comment: CommentDef = {
+        const comment: Define20.CommentDef = {
             oid: commentRaw["$"]["oid"],
         };
         if (commentRaw["description"]) {
@@ -288,20 +91,14 @@ const parseCommentDefs = (
     return { commentDefs, commentDefsOrder };
 };
 
-const parseFormalExpressions = (formalExpressionsRaw: any[]): FormalExpression[] => {
-    if (!formalExpressionsRaw) return [];
-    return formalExpressionsRaw.map((fe) => ({
-        context: fe["$"]["context"],
-        value: fe.value,
-    }));
-};
-
-const parseMethodDefs = (methodsRaw: any[]): { methodDefs: Record<string, MethodDef>; methodDefsOrder: string[] } => {
-    const methodDefs: Record<string, MethodDef> = {};
+const parseMethodDefs = (
+    methodsRaw: any[]
+): { methodDefs: Record<string, Define20.MethodDef>; methodDefsOrder: string[] } => {
+    const methodDefs: Record<string, Define20.MethodDef> = {};
     const methodDefsOrder: string[] = [];
     if (!methodsRaw) return { methodDefs, methodDefsOrder };
     methodsRaw.forEach((methodRaw) => {
-        const method: MethodDef = {
+        const method: Define20.MethodDef = {
             oid: methodRaw["$"]["oid"],
             name: methodRaw["$"]["name"],
             type: methodRaw["$"]["type"] as "Computation" | "Imputation",
@@ -321,12 +118,12 @@ const parseMethodDefs = (methodsRaw: any[]): { methodDefs: Record<string, Method
     return { methodDefs, methodDefsOrder };
 };
 
-const parseItemRef = (itemRefRaw: any): ItemRef => {
+const parseItemRef = (itemRefRaw: any): Define20.ItemRef => {
     const rawMandatory = itemRefRaw["$"]["mandatory"];
     if (rawMandatory !== "Yes" && rawMandatory !== "No") {
         throw new Error(`Invalid value for ItemRef.mandatory: ${rawMandatory}`);
     }
-    const itemRef: ItemRef = {
+    const itemRef: Define20.ItemRef = {
         itemOid: itemRefRaw["$"]["itemOid"],
         mandatory: rawMandatory === "Yes",
     };
@@ -354,15 +151,15 @@ const parseItemRef = (itemRefRaw: any): ItemRef => {
 
 const parseValueLists = (
     valueListsRaw: any[]
-): { valueListDefs: Record<string, ValueListDef>; valueListDefsOrder: string[] } => {
-    const valueLists: Record<string, ValueListDef> = {};
+): { valueListDefs: Record<string, Define20.ValueListDef>; valueListDefsOrder: string[] } => {
+    const valueLists: Record<string, Define20.ValueListDef> = {};
     const valueListDefsOrder: string[] = [];
     if (!valueListsRaw) return { valueListDefs: valueLists, valueListDefsOrder };
     valueListsRaw.forEach((vlRaw) => {
         const { itemRefs, itemRefsOrder } = vlRaw["itemRef"]
             ? parseItemRefs(vlRaw["itemRef"])
             : { itemRefs: {}, itemRefsOrder: [] };
-        const valueList: ValueListDef = {
+        const valueList: Define20.ValueListDef = {
             oid: vlRaw["$"]["oid"],
             itemRefs,
             itemRefsOrder,
@@ -373,8 +170,8 @@ const parseValueLists = (
     return { valueListDefs: valueLists, valueListDefsOrder };
 };
 
-const parseItemRefs = (itemRefsRaw: any[]): { itemRefs: Record<string, ItemRef>; itemRefsOrder: string[] } => {
-    const itemRefs: Record<string, ItemRef> = {};
+const parseItemRefs = (itemRefsRaw: any[]): { itemRefs: Record<string, Define20.ItemRef>; itemRefsOrder: string[] } => {
+    const itemRefs: Record<string, Define20.ItemRef> = {};
     const itemRefsOrder: string[] = [];
     if (!itemRefsRaw) return { itemRefs, itemRefsOrder };
     itemRefsRaw.forEach((itemRefRaw) => {
@@ -386,15 +183,15 @@ const parseItemRefs = (itemRefsRaw: any[]): { itemRefs: Record<string, ItemRef>;
     return { itemRefs, itemRefsOrder };
 };
 
-const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, ItemDef>; itemDefsOrder: string[] } => {
-    const itemDefs: Record<string, ItemDef> = {};
+const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, Define20.ItemDef>; itemDefsOrder: string[] } => {
+    const itemDefs: Record<string, Define20.ItemDef> = {};
     const itemDefsOrder: string[] = [];
     if (!itemDefsRaw) return { itemDefs, itemDefsOrder };
     itemDefsRaw.forEach((itemDefRaw) => {
-        const itemDef: ItemDef = {
+        const itemDef: Define20.ItemDef = {
             oid: itemDefRaw["$"]["oid"],
             name: itemDefRaw["$"]["name"],
-            dataType: itemDefRaw["$"]["dataType"] as ItemDefDataType,
+            dataType: itemDefRaw["$"]["dataType"] as Define20.ItemDefDataType,
         };
         if (itemDefRaw["$"]["length"]) {
             itemDef.length = Number(itemDefRaw["$"]["length"]);
@@ -431,8 +228,8 @@ const parseItemDefs = (itemDefsRaw: any[]): { itemDefs: Record<string, ItemDef>;
 
 const parseItemGroups = (
     itemGroupsRaw: any[]
-): { itemGroupDefs: Record<string, ItemGroupDef>; itemGroupDefsOrder: string[] } => {
-    const itemGroupDefs: Record<string, ItemGroupDef> = {};
+): { itemGroupDefs: Record<string, Define20.ItemGroupDef>; itemGroupDefsOrder: string[] } => {
+    const itemGroupDefs: Record<string, Define20.ItemGroupDef> = {};
     const itemGroupDefsOrder: string[] = [];
     if (!itemGroupsRaw) return { itemGroupDefs, itemGroupDefsOrder };
     itemGroupsRaw.forEach((igRaw) => {
@@ -443,14 +240,14 @@ const parseItemGroups = (
         if (rawRepeating !== "Yes" && rawRepeating !== "No") {
             throw new Error(`Invalid value for ItemGroupDef.repeating: ${rawRepeating}`);
         }
-        const itemGroup: ItemGroupDef = {
+        const itemGroup: Define20.ItemGroupDef = {
             oid: igRaw["$"]["oid"],
             name: igRaw["$"]["name"],
             repeating: rawRepeating === "Yes",
-            purpose: igRaw["$"]["purpose"] as ItemGroupDefPurpose,
+            purpose: igRaw["$"]["purpose"] as Define20.ItemGroupDefPurpose,
             sasDatasetName: igRaw["$"]["sASDatasetName"],
             structure: igRaw["$"]["structure"],
-            class: igRaw["$"]["class"] as ItemGroupDefClassNames,
+            class: igRaw["$"]["class"] as Define20.ItemGroupDefClassNames,
             archiveLocationId: igRaw["$"]["archiveLocationId"],
             itemRefs,
             itemRefsOrder,
@@ -484,11 +281,16 @@ const parseItemGroups = (
     return { itemGroupDefs, itemGroupDefsOrder };
 };
 
-const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
+interface ParseMetadata {
+    (metadataRaw: any, hasArm: true): ArmDefine20.MetaDataVersion;
+    (metadataRaw: any, hasArm?: false): Define20.MetaDataVersion;
+}
+
+const parseMetaDataVersion: ParseMetadata = (metadataRaw: any, hasArm?: boolean): any => {
     const { itemGroupDefs, itemGroupDefsOrder } = parseItemGroups(metadataRaw["itemGroupDef"]);
     const { itemDefs, itemDefsOrder } = parseItemDefs(metadataRaw["itemDef"]);
 
-    const result: MetaDataVersion = {
+    const result: Define20.MetaDataVersion = {
         oid: metadataRaw["$"]["oid"],
         name: metadataRaw["$"]["name"],
         description: metadataRaw["$"]["description"],
@@ -542,23 +344,53 @@ const parseMetaDataVersion = (metadataRaw: any): MetaDataVersion => {
         result.leafsOrder = leafsOrder;
     }
 
-    return result;
+    if (hasArm === true) {
+        const resultWithArm: ArmDefine20.MetaDataVersion = {
+            ...result,
+            analysisResultDisplays: parseAnalysisResultDisplays(metadataRaw["analysisResultDisplays"], "2.0"),
+        };
+        return resultWithArm;
+    } else {
+        return result;
+    }
 };
 
-const parseGlobalVariables = (globalVariablesRaw: any): GlobalVariables => ({
-    studyName: globalVariablesRaw["studyName"][0],
-    studyDescription: globalVariablesRaw["studyDescription"][0],
-    protocolName: globalVariablesRaw["protocolName"][0],
-});
+interface ParseStudy {
+    (studyRaw: any, hasArm: true): ArmDefine20.DefineXml["odm"]["study"];
+    (studyRaw: any, hasArm?: false): Define20.Study;
+}
 
-const parseStudy = (studyRaw: any): Study => ({
-    studyOid: studyRaw["$"]["oid"],
-    globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
-    metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
-});
+const parseStudy: ParseStudy = (studyRaw: any, hasArm?: boolean): any => {
+    if (hasArm === true) {
+        const studyWithArm: ArmDefine20.DefineXml["odm"]["study"] = {
+            studyOid: studyRaw["$"]["oid"],
+            globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
+            metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0], hasArm),
+        };
+        return studyWithArm;
+    } else {
+        const study: Define20.Study = {
+            studyOid: studyRaw["$"]["oid"],
+            globalVariables: parseGlobalVariables(studyRaw["globalVariables"][0]),
+            metaDataVersion: parseMetaDataVersion(studyRaw["metaDataVersion"][0]),
+        };
+        return study;
+    }
+};
 
-const parseOdm = (odmRaw: any): Odm => {
-    const result: Odm = {
+interface ParseOdm {
+    (odmRaw: any, hasArm: true): ArmDefine20.DefineXml["odm"];
+    (odmRaw: any, hasArm?: false): Define20.Odm;
+}
+
+const parseOdm: ParseOdm = (odmRaw: any, hasArm?: boolean): any => {
+    let study: Define20.Study | ArmDefine20.DefineXml["odm"]["study"];
+    if (hasArm === true) {
+        study = parseStudy(odmRaw["study"][0], true);
+    } else {
+        study = parseStudy(odmRaw["study"][0]);
+    }
+    const result: Define20.Odm | ArmDefine20.DefineXml["odm"] = {
         xmlns: odmRaw["$"]["xmlns"] as "http://www.cdisc.org/ns/odm/v1.3",
         xmlns_def: odmRaw["$"]["xmlns:def"] as "http://www.cdisc.org/ns/def/v2.0",
         xsi_schemaLocation: odmRaw["$"]["xsi:schemaLocation"],
@@ -566,7 +398,7 @@ const parseOdm = (odmRaw: any): Odm => {
         fileType: "Snapshot",
         fileOid: odmRaw["$"]["fileOid"],
         creationDateTime: odmRaw["$"]["creationDateTime"],
-        study: parseStudy(odmRaw["study"][0]),
+        study,
     };
     if (odmRaw["$"]["asOfDateTime"]) {
         result.asOfDateTime = odmRaw["$"]["asOfDateTime"];
@@ -586,18 +418,57 @@ const parseOdm = (odmRaw: any): Odm => {
     if (odmRaw["$"]["xmlns:xsi"]) {
         result.xmlns_xsi = odmRaw["$"]["xmlns:xsi"] as "http://www.w3.org/2001/XMLSchema-instance";
     }
-    return result;
+    if (hasArm === true) {
+        const resultWithArm: ArmDefine20.DefineXml["odm"] = {
+            ...(result as ArmDefine20.DefineXml["odm"]),
+            xmlns_arm: odmRaw["$"]["xmlns:arm"] as "http://www.cdisc.org/ns/arm/v1.0",
+        };
+        return resultWithArm;
+    } else {
+        return result;
+    }
 };
 
 /**
  * Main parser function for Define-XML 2.0
  */
-const parseDefineXml = async (xmlString: string): Promise<Odm> => {
+interface ParseDefineXml {
+    (xmlString: string, hasArm?: false): Promise<Define20.DefineXml>;
+    (xmlString: string, hasArm?: true): Promise<ArmDefine20.DefineXml>;
+}
+const parseDefineXml: ParseDefineXml = async (xmlString: string, hasArm?: boolean): Promise<any> => {
     // Parse XML string into object using xml2js
-    let result: any;
+    const defineXml: Partial<Define20.DefineXml> = {
+        xml: {},
+        styleSheet: {},
+    };
+    let parsedXml: Record<string, any> = {};
 
     try {
-        result = await xml2js.parseStringPromise(xmlString, {
+        // Read first lines until ODM tag which contain XML declaration and stylesheet information
+        const xmlHeader = xmlString.match(/<\?xml.*\?>/);
+        const xmlStyleSheet = xmlString.match(/<\?xml-stylesheet.*\?>/);
+        if (xmlHeader && defineXml.xml) {
+            const versionMatch = xmlHeader[0].match(/<\?xml.*\s+version="([^"]+)"\s+encoding="([^"]+)"\s*\?>/);
+            const encodingMatch = xmlHeader[0].match(/<\?xml.*\s+encoding="([^"]+)"\s*\?>/);
+            if (versionMatch) {
+                defineXml.xml.version = versionMatch[1];
+            }
+            if (encodingMatch) {
+                defineXml.xml.encoding = encodingMatch[1];
+            }
+        }
+        if (xmlStyleSheet && defineXml.styleSheet) {
+            const typeMatch = xmlStyleSheet[0].match(/type="([^"]+)"/);
+            const hrefMatch = xmlStyleSheet[0].match(/href="([^"]+)"/);
+            if (typeMatch) {
+                defineXml.styleSheet.type = typeMatch[1];
+            }
+            if (hrefMatch) {
+                defineXml.styleSheet.href = hrefMatch[1];
+            }
+        }
+        parsedXml = await xml2js.parseStringPromise(xmlString, {
             explicitArray: true,
             mergeAttrs: false,
             explicitCharkey: false,
@@ -609,13 +480,19 @@ const parseDefineXml = async (xmlString: string): Promise<Odm> => {
     }
 
     // Convert all attribute/element names to lower camel case and remove def: and arm: namespaces
-    const resultUpdated = convertAttributeNameToLowerCamelCase(removeNamespaces(result)) as Record<string, any>;
+    const parsedXmlUpdated = convertAttributeNameToLowerCamelCase(removeNamespaces(parsedXml)) as Record<string, any>;
 
-    if (!resultUpdated || !resultUpdated["odm"]) {
+    if (!parsedXmlUpdated || !parsedXmlUpdated["odm"]) {
         throw new Error("Invalid Define-XML structure: missing ODM root element");
     }
 
-    return parseOdm(resultUpdated["odm"]);
+    if (hasArm === true) {
+        defineXml.odm = parseOdm(parsedXmlUpdated["odm"], true) as ArmDefine20.DefineXml["odm"];
+        return defineXml as ArmDefine20.DefineXml;
+    } else {
+        defineXml.odm = parseOdm(parsedXmlUpdated["odm"]) as Define20.DefineXml["odm"];
+        return defineXml as Define20.DefineXml;
+    }
 };
 
 export default parseDefineXml;

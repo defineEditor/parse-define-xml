@@ -45,3 +45,68 @@ export type StandardName =
     | "SENDIG-GENETOX";
 export type StandardType = "CT" | "IG";
 export type StandardStatus = "FINAL" | "DRAFT" | "PROVISIONAL" | string;
+
+// Common interfaces between 2.0 and 2.1
+export interface Alias {
+    context: string;
+    name: string;
+}
+
+export interface TranslatedText {
+    xml_lang?: string;
+    value: string;
+}
+
+export interface Leaf {
+    id: string;
+    xlink_href: string;
+    title: string;
+}
+
+export interface WhereClauseDef {
+    oid: string;
+    commentOid?: string;
+    rangeChecks: RangeCheck[];
+}
+
+export interface RangeCheck {
+    comparator: Comparator;
+    softHard: SoftHard;
+    itemOid: string;
+    checkValues: string[];
+}
+
+export interface ExternalCodeList {
+    dictionary: string;
+    version: string;
+    ref?: string;
+    href?: string;
+}
+
+export interface EnumeratedItem {
+    codedValue: string;
+    rank?: number;
+    orderNumber?: number;
+    extendedValue?: true;
+    alias?: Alias[];
+}
+
+export interface CodeListItem {
+    codedValue: string;
+    rank?: number;
+    orderNumber?: number;
+    extendedValue?: true;
+    decode: TranslatedText[];
+    alias?: Alias[];
+}
+
+export interface FormalExpression {
+    context: string;
+    value: string;
+}
+
+export interface GlobalVariables {
+    studyName: string;
+    studyDescription: string;
+    protocolName: string;
+}

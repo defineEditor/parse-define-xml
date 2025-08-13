@@ -3,5 +3,8 @@ node_modules/
 dist/
 .env
 
+# Jest coverage
+coverage/
+
 # Reference folder
 ref/
