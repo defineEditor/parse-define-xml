@@ -620,9 +620,6 @@ const parseDefineXml: ParseDefineXml = async (xmlString: string, hasArm?: boolea
         throw new Error("Invalid Define-XML structure: missing ODM root element");
     }
 
-    defineXml.odm =
-        hasArm === true ? parseOdm(parsedXmlUpdated["odm"], true) : parseOdm(parsedXmlUpdated["odm"], false);
-
     if (hasArm === true) {
         defineXml.odm = parseOdm(parsedXmlUpdated["odm"], true) as ArmDefine21.DefineXml["odm"];
         return defineXml as ArmDefine21.DefineXml;

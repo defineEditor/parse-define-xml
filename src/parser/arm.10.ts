@@ -5,7 +5,7 @@
  */
 
 import type { ArmDefine20, ArmDefine21 } from "interfaces/arm.10";
-import type { AnalysisDataset, AnalysisDatasets } from "interfaces/arm.10";
+import type { AnalysisDatasetCore, AnalysisDatasetsCore } from "interfaces/arm.10";
 import { parseTranslatedText } from "parser/define.core";
 import { parseDocumentRefs as parseDocumentRefs20 } from "parser/define.20.core";
 import { parseDocumentRefs as parseDocumentRefs21 } from "parser/define.21.core";
@@ -172,15 +172,15 @@ const parseAnalysisResult = (
     throw new Error(`Unsupported defineVer: ${defineVer}`);
 };
 
-const parseAnalysisDatasets = (analysisDatasetsRaw: any): AnalysisDatasets => {
-    const analysisDatasets: Record<string, AnalysisDataset> = {};
+const parseAnalysisDatasets = (analysisDatasetsRaw: any): AnalysisDatasetsCore => {
+    const analysisDatasets: Record<string, AnalysisDatasetCore> = {};
     const analysisDatasetsOrder: string[] = [];
     analysisDatasetsRaw[0].analysisDataset.forEach((analysisDatasetRaw: any) => {
         const analysisDataset = parseAnalysisDataset(analysisDatasetRaw);
         analysisDatasets[analysisDataset.itemGroupOid] = analysisDataset;
         analysisDatasetsOrder.push(analysisDataset.itemGroupOid);
     });
-    const result: AnalysisDatasets = {
+    const result: AnalysisDatasetsCore = {
         analysisDatasets,
         analysisDatasetsOrder,
     };
@@ -190,8 +190,8 @@ const parseAnalysisDatasets = (analysisDatasetsRaw: any): AnalysisDatasets => {
     return result;
 };
 
-const parseAnalysisDataset = (analysisDatasetRaw: any): AnalysisDataset => {
-    const analysisDataset: AnalysisDataset = {
+const parseAnalysisDataset = (analysisDatasetRaw: any): AnalysisDatasetCore => {
+    const analysisDataset: AnalysisDatasetCore = {
         itemGroupOid: analysisDatasetRaw["$"]["itemGroupOid"],
     };
     if (analysisDatasetRaw["whereClauseRef"]) {
@@ -230,7 +230,7 @@ const parseDocumentation: ParseDocumentation = (
             description: documentationRaw[0]["description"].map(parseTranslatedText),
         };
         if (documentationRaw[0]["documentRef"]) {
-            documentation.documents = documentationRaw[0]["documentRef"].map(parseDocumentRefs21);
+            documentation.documents = parseDocumentRefs21(documentationRaw[0]["documentRef"]);
         }
         return documentation;
     }

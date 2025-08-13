@@ -3,29 +3,29 @@
 import * as Core from "interfaces/define.xml.core";
 export namespace Define20 {
     // Core type aliases for namespace usage
-    type ItemDefDataType = Core.ItemDefDataType;
-    type ItemGroupDefClassNames = Core.ItemGroupDefClassNames;
-    type ItemGroupDefPurpose = Core.ItemGroupDefPurpose;
-    type PdfPageRefType = Core.PdfPageRefType;
-    type CodeListType = Core.CodeListType;
-    type Alias = Core.Alias;
-    type TranslatedText = Core.TranslatedText;
-    type Leaf = Core.Leaf;
-    type WhereClauseDef = Core.WhereClauseDef;
-    type EnumeratedItem = Core.EnumeratedItem;
-    type CodeListItem = Core.CodeListItem;
-    type ExternalCodeList = Core.ExternalCodeList;
-    type FormalExpression = Core.FormalExpression;
-    type GlobalVariables = Core.GlobalVariables;
-    type OriginType = "CRF" | "Derived" | "Assigned" | "Protocol" | "eDT" | "Predecessor";
+    export type ItemDefDataType = Core.ItemDefDataType;
+    export type ItemGroupDefClassNames = Core.ItemGroupDefClassNames;
+    export type ItemGroupDefPurpose = Core.ItemGroupDefPurpose;
+    export type PdfPageRefType = Core.PdfPageRefType;
+    export type CodeListType = Core.CodeListType;
+    export type Alias = Core.Alias;
+    export type TranslatedText = Core.TranslatedText;
+    export type Leaf = Core.Leaf;
+    export type WhereClauseDef = Core.WhereClauseDef;
+    export type EnumeratedItem = Core.EnumeratedItem;
+    export type CodeListItem = Core.CodeListItem;
+    export type ExternalCodeList = Core.ExternalCodeList;
+    export type FormalExpression = Core.FormalExpression;
+    export type GlobalVariables = Core.GlobalVariables;
+    export type OriginType = "CRF" | "Derived" | "Assigned" | "Protocol" | "eDT" | "Predecessor";
 
-    interface Origin {
+    export interface Origin {
         type: OriginType;
         description?: TranslatedText[];
         documentRefs?: DocumentRef[];
     }
 
-    interface PdfPageRef {
+    export interface PdfPageRef {
         type: PdfPageRefType;
         pageRefs?: string;
         firstPage?: number;
@@ -37,13 +37,13 @@ export namespace Define20 {
         pdfPageRefs?: PdfPageRef[];
     }
 
-    interface CommentDef {
+    export interface CommentDef {
         oid: string;
         description?: TranslatedText[];
         documentRefs?: DocumentRef[];
     }
 
-    interface MethodDef {
+    export interface MethodDef {
         oid: string;
         name: string;
         type: "Computation" | "Imputation";
@@ -52,7 +52,7 @@ export namespace Define20 {
         formalExpressions?: FormalExpression[];
     }
 
-    interface CodeList {
+    export interface CodeList {
         oid: string;
         name: string;
         dataType: CodeListType;
@@ -64,7 +64,7 @@ export namespace Define20 {
         externalCodeList?: ExternalCodeList;
     }
 
-    interface MetaDataVersion {
+    export interface MetaDataVersion {
         oid: string;
         name: string;
         description?: string;
@@ -91,19 +91,19 @@ export namespace Define20 {
         leafsOrder?: string[];
     }
 
-    interface ValueListDef {
+    export interface ValueListDef {
         oid: string;
         itemRefs: Record<string, ItemRef>;
         itemRefsOrder: string[];
     }
 
-    interface Study {
+    export interface Study {
         studyOid: string;
         globalVariables: GlobalVariables;
         metaDataVersion: MetaDataVersion;
     }
 
-    interface Odm {
+    export interface Odm {
         xmlns: "http://www.cdisc.org/ns/odm/v1.3";
         xmlns_def: "http://www.cdisc.org/ns/def/v2.0";
         xmlns_xlink?: "http://www.w3.org/1999/xlink"; // Conditional
@@ -120,7 +120,7 @@ export namespace Define20 {
         study: Study;
     }
 
-    interface ItemGroupDef {
+    export interface ItemGroupDef {
         oid: string;
         name: string;
         repeating: boolean;
@@ -139,7 +139,7 @@ export namespace Define20 {
         leaf?: Leaf;
     }
 
-    interface ItemDef {
+    export interface ItemDef {
         oid: string;
         name: string;
         dataType: ItemDefDataType;
@@ -154,7 +154,7 @@ export namespace Define20 {
         valueListRef?: string;
     }
 
-    interface ItemRef {
+    export interface ItemRef {
         itemOid: string;
         mandatory: boolean;
         orderNumber?: number;
@@ -165,7 +165,7 @@ export namespace Define20 {
         whereClauseRefs?: string[];
     }
 
-    interface DefineXml {
+    export interface DefineXml {
         xml: {
             version?: string;
             encoding?: string;
