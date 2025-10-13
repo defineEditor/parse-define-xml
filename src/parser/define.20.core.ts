@@ -4,7 +4,7 @@
  * Core functions to parse Define XML 2.0 and ARM
  */
 
-import { Define20 } from "interfaces/define.xml.20";
+import { Define20 } from "../interfaces/define.xml.20";
 
 const parsePdfPageRefs = (pdfPageRefsRaw: any[]): Define20.PdfPageRef[] => {
     // There are no PDF page references

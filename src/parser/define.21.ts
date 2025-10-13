@@ -5,7 +5,7 @@
  */
 
 import * as xml2js from "xml2js";
-import { convertAttributeNameToLowerCamelCase, removeNamespaces } from "parser/utils";
+import { convertAttributeNameToLowerCamelCase, removeNamespaces } from "./utils";
 import {
     parseTranslatedText,
     parseAliases,
@@ -16,11 +16,11 @@ import {
     parseExternalCodeList,
     parseFormalExpressions,
     parseGlobalVariables,
-} from "parser/define.core";
-import type { Define21 } from "interfaces/define.xml.21.d.ts";
-import { ArmDefine21 } from "interfaces/arm.10";
-import { parseAnalysisResultDisplays } from "parser/arm.10";
-import { parseDocumentRefs } from "parser/define.21.core";
+} from "./define.core";
+import type { Define21 } from "../interfaces/define.xml.21.d.ts";
+import { ArmDefine21 } from "../interfaces/arm.10";
+import { parseAnalysisResultDisplays } from "./arm.10";
+import { parseDocumentRefs } from "./define.21.core";
 
 const parseOrigin = (originRaw: any[]): Define21.Origin[] => {
     return originRaw.map((item) => {

@@ -16,11 +16,11 @@ import {
     parseExternalCodeList,
     parseFormalExpressions,
     parseGlobalVariables,
-} from "parser/define.core";
-import type { Define20 } from "interfaces/define.xml.20";
-import { ArmDefine20 } from "interfaces/arm.10";
-import { parseAnalysisResultDisplays } from "parser/arm.10";
-import { parseDocumentRefs } from "parser/define.20.core";
+} from "./define.core";
+import type { Define20 } from "../interfaces/define.xml.20";
+import { ArmDefine20 } from "../interfaces/arm.10";
+import { parseAnalysisResultDisplays } from "./arm.10";
+import { parseDocumentRefs } from "./define.20.core";
 
 const parseOrigin = (originRaw: any): Define20.Origin => {
     const result: Define20.Origin = {

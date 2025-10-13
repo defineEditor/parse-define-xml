@@ -1,5 +1,5 @@
 // Main parser function
-export * from "parser/define";
+export * from "./parser/define";
 
 // Export interfaces
-export * from "interfaces/define.xml";
+export * from "./interfaces/define.xml";
