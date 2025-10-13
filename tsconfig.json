@@ -10,7 +10,6 @@
     "pretty": true,
     "sourceMap": true,
     "baseUrl": "./src",
-    "rootDir": ".",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -24,5 +23,5 @@
     "allowJs": false,
     "outDir": "dist",
   },
-  "include": ["src"]
+  "include": ["src/**/*", "index.d.ts"]
 }

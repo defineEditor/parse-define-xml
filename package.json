@@ -1,6 +1,6 @@
 {
     "name": "parse-define-xml",
-    "version": "0.1",
+    "version": "0.11.0",
     "description": "Parse Define-XML files",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "scripts": {
         "test": "jest",
         "coverage": "jest --coverage",
-        "build": "tsc",
+        "build": "rm -rf dist && tsc",
         "release": "npm run lint && npm run test && npm run build && npm publish",
         "lint": "eslint . --ignore-pattern 'dist'"
     },
