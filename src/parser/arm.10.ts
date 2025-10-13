@@ -4,11 +4,11 @@
  * Parse ARM 1.0 to TypeScript interfaces
  */
 
-import type { ArmDefine20, ArmDefine21 } from "interfaces/arm.10";
-import type { AnalysisDatasetCore, AnalysisDatasetsCore } from "interfaces/arm.10";
-import { parseTranslatedText } from "parser/define.core";
-import { parseDocumentRefs as parseDocumentRefs20 } from "parser/define.20.core";
-import { parseDocumentRefs as parseDocumentRefs21 } from "parser/define.21.core";
+import type { ArmDefine20, ArmDefine21 } from "../interfaces/arm.10";
+import type { AnalysisDatasetCore, AnalysisDatasetsCore } from "../interfaces/arm.10";
+import { parseTranslatedText } from "./define.core";
+import { parseDocumentRefs as parseDocumentRefs20 } from "./define.20.core";
+import { parseDocumentRefs as parseDocumentRefs21 } from "./define.21.core";
 
 interface ParseAnalysisResultDisplays {
     (analysisResultDisplayRaw: any, defineVer: "2.0"): ArmDefine20.AnalysisResultDisplays["analysisResultDisplays"];

@@ -1,6 +1,6 @@
 // Define-XML 2.0 interfaces (attributes use lowerCamelCase comparing to the XML specification)
 
-import * as Core from "interfaces/define.xml.core";
+import * as Core from "./define.xml.core";
 export namespace Define20 {
     // Core type aliases for namespace usage
     export type ItemDefDataType = Core.ItemDefDataType;

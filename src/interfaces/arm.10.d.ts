@@ -1,6 +1,6 @@
 // ARM extension for Define-XML MetaDataVersion (works for both 2.0 and 2.1)
-import { Define20 } from "interfaces/define.xml.20";
-import { Define21 } from "interfaces/define.xml.21";
+import { Define20 } from "./define.xml.20";
+import { Define21 } from "./define.xml.21";
 
 // ARM generic interfaces
 

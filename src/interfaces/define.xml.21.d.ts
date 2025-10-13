@@ -1,6 +1,6 @@
 // Define-XML 2.1 interfaces (attributes use lowerCamelCase comparing to the XML specification)
 
-import * as Core from "interfaces/define.xml.core";
+import * as Core from "./define.xml.core";
 
 export namespace Define21 {
     // Core type aliases for namespace usage

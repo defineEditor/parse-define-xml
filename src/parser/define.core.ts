@@ -13,7 +13,7 @@ import {
     ExternalCodeList,
     FormalExpression,
     GlobalVariables,
-} from "interfaces/define.xml.core";
+} from "../interfaces/define.xml.core";
 
 export const parseTranslatedText = (translatedTextRaw: any): TranslatedText => {
     const text = translatedTextRaw.translatedText[0];

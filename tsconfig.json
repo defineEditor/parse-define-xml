@@ -10,6 +10,7 @@
     "pretty": true,
     "sourceMap": true,
     "baseUrl": "./src",
+    "rootDir": "./src",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,

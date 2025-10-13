@@ -4,7 +4,7 @@
  * Core functions to parse Define XML 2.1 and ARM
  */
 
-import type { Define21 } from "interfaces/define.xml.21.d.ts";
+import type { Define21 } from "../interfaces/define.xml.21.d.ts";
 
 const parsePdfPageRefs = (pdfPageRefsRaw: any[]): Define21.PdfPageRef[] => {
     // There are no PDF page references
