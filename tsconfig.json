@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "es2024",
+    "target": "es2023",
     "module": "commonjs",
-    "lib": ["dom", "es2024"],
+    "lib": ["dom", "es2023"],
     "declaration": true,
     "declarationMap": true,
     "strict": true,
