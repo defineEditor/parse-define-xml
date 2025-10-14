@@ -5,7 +5,7 @@
  */
 
 import * as xml2js from "xml2js";
-import { convertAttributeNameToLowerCamelCase, removeNamespaces } from "parser/utils";
+import { convertAttributeNameToLowerCamelCase, removeNamespaces } from "./utils";
 import {
     parseTranslatedText,
     parseAliases,
