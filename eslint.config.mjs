@@ -7,5 +7,6 @@ export default tseslint.config(eslint.configs.recommended, tseslint.configs.reco
         "no-trailing-spaces": "error",
         "func-style": ["error", "expression"],
         indent: ["error", 4],
+        "@typescript-eslint/no-namespace": ["error", { allowDeclarations: true }],
     },
 });

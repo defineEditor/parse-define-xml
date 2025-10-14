@@ -1,44 +1,35 @@
-// Define-XML 2.1 interfaces (attributes use lowerCamelCase comparing to the XML specification)
+// Define-XML 2.0 interfaces (attributes use lowerCamelCase comparing to the XML specification)
 
 import * as Core from "./define.xml.core";
-
-export namespace Define21 {
+export declare namespace Define20 {
     // Core type aliases for namespace usage
     export type ItemDefDataType = Core.ItemDefDataType;
     export type ItemGroupDefClassNames = Core.ItemGroupDefClassNames;
-    export type ItemGroupDefSubclassNames = Core.ItemGroupDefSubclassNames;
     export type ItemGroupDefPurpose = Core.ItemGroupDefPurpose;
     export type PdfPageRefType = Core.PdfPageRefType;
     export type CodeListType = Core.CodeListType;
-    export type StandardName = Core.StandardName;
-    export type StandardType = Core.StandardType;
-    export type StandardStatus = Core.StandardStatus;
     export type Alias = Core.Alias;
     export type TranslatedText = Core.TranslatedText;
     export type Leaf = Core.Leaf;
     export type WhereClauseDef = Core.WhereClauseDef;
-    export type ExternalCodeList = Core.ExternalCodeList;
     export type EnumeratedItem = Core.EnumeratedItem;
     export type CodeListItem = Core.CodeListItem;
+    export type ExternalCodeList = Core.ExternalCodeList;
     export type FormalExpression = Core.FormalExpression;
     export type GlobalVariables = Core.GlobalVariables;
+    export type OriginType = "CRF" | "Derived" | "Assigned" | "Protocol" | "eDT" | "Predecessor";
 
-    export type OriginType =
-        | "Assigned"
-        | "Collected"
-        | "Derived"
-        | "Not Available"
-        | "Other"
-        | "Predecessor"
-        | "Protocol";
-    export type OriginSource = "Investigator" | "Sponsor" | "Subject" | "Vendor";
+    export interface Origin {
+        type: OriginType;
+        description?: TranslatedText[];
+        documentRefs?: DocumentRef[];
+    }
 
     export interface PdfPageRef {
         type: PdfPageRefType;
         pageRefs?: string;
         firstPage?: number;
         lastPage?: number;
-        title?: string;
     }
 
     export interface DocumentRef {
@@ -61,37 +52,16 @@ export namespace Define21 {
         formalExpressions?: FormalExpression[];
     }
 
-    export interface Origin {
-        type: OriginType;
-        description?: TranslatedText[];
-        documentRefs?: DocumentRef[];
-        source?: OriginSource;
-    }
-
     export interface CodeList {
         oid: string;
         name: string;
         dataType: CodeListType;
-        standardOid?: string;
-        isNonStandard?: true;
-        description?: TranslatedText[];
-        alias?: Alias[];
-        commentOid?: string;
         sasFormatName?: string;
+        alias?: Alias[];
         // Children (one of the following groups is required)
         enumeratedItems?: EnumeratedItem[];
         codeListItems?: CodeListItem[];
         externalCodeList?: ExternalCodeList;
-    }
-
-    export interface Standard {
-        oid: string;
-        name: StandardName;
-        type: StandardType;
-        version: string;
-        publishingSet?: string;
-        status?: StandardStatus;
-        commentOid?: string;
     }
 
     export interface MetaDataVersion {
@@ -99,8 +69,8 @@ export namespace Define21 {
         name: string;
         description?: string;
         defineVersion: string;
-        standards: Record<string, Standard>;
-        standardsOrder: string[];
+        standardName: string;
+        standardVersion: string;
         itemGroupDefs: Record<string, ItemGroupDef>;
         itemGroupDefsOrder: string[];
         itemDefs: Record<string, ItemDef>;
@@ -119,14 +89,12 @@ export namespace Define21 {
         commentDefsOrder?: string[];
         leafs?: Record<string, Leaf>;
         leafsOrder?: string[];
-        commentOid?: string;
     }
 
     export interface ValueListDef {
         oid: string;
         itemRefs: Record<string, ItemRef>;
         itemRefsOrder: string[];
-        description?: TranslatedText[];
     }
 
     export interface Study {
@@ -137,7 +105,7 @@ export namespace Define21 {
 
     export interface Odm {
         xmlns: "http://www.cdisc.org/ns/odm/v1.3";
-        xmlns_def: "http://www.cdisc.org/ns/def/v2.1";
+        xmlns_def: "http://www.cdisc.org/ns/def/v2.0";
         xmlns_xlink?: "http://www.w3.org/1999/xlink"; // Conditional
         xmlns_xsi?: "http://www.w3.org/2001/XMLSchema-instance"; // Conditional
         xsi_schemaLocation?: string; // Optional
@@ -145,22 +113,11 @@ export namespace Define21 {
         fileType: "Snapshot";
         fileOid: string;
         creationDateTime: string; // ISO8601 datetime
-        context: string;
-        study: Study;
         asOfDateTime?: string; // ISO8601 datetime
         originator?: string;
         sourceSystem?: string;
         sourceSystemVersion?: string;
-    }
-
-    export interface ItemGroupDefSubclass {
-        name: ItemGroupDefSubclassNames;
-        parentClassName?: ItemGroupDefClassNames | ItemGroupDefSubclassNames;
-    }
-
-    export interface ItemGroupDefClass {
-        name: ItemGroupDefClassNames;
-        subClasses?: ItemGroupDefSubclass[];
+        study: Study;
     }
 
     export interface ItemGroupDef {
@@ -171,12 +128,9 @@ export namespace Define21 {
         domain?: string; // Required for SDTM and SEND
         sasDatasetName?: string; // Required for regulatory submissions
         structure?: string; // Required for regulatory submissions
-        standardOid?: string;
-        isNonStandard?: true;
-        class?: ItemGroupDefClass; // Required for regulatory submissions
+        class?: ItemGroupDefClassNames; // Required for regulatory submissions
         archiveLocationId?: string; // Required for regulatory submissions
         isReferenceData?: boolean;
-        hasNoData?: true;
         commentOid?: string;
         description?: TranslatedText[];
         itemRefs: Record<string, ItemRef>;
@@ -198,7 +152,6 @@ export namespace Define21 {
         codeListRef?: string;
         origins?: Origin[];
         valueListRef?: string;
-        alias?: Alias[];
     }
 
     export interface ItemRef {
@@ -210,8 +163,6 @@ export namespace Define21 {
         role?: string; // Optional for SDTM standard domains, conditional required for SDTM custom domains
         roleCodeListOid?: string;
         whereClauseRefs?: string[];
-        isNonStandard?: true;
-        standardOid?: string;
     }
 
     export interface DefineXml {

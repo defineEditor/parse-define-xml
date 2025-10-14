@@ -16,13 +16,14 @@ type AnalysisPurposeCore =
     | "SECONDARY OUTCOME MEASURE"
     | string;
 
-interface AnalysisDatasetCore {
+export interface AnalysisDatasetCore {
     itemGroupOid: string;
     whereClauseOid?: string;
     whereClauseRefs?: string[];
     analysisVariables?: string[];
 }
-interface AnalysisDatasetsCore {
+
+export interface AnalysisDatasetsCore {
     analysisDatasets: Record<string, AnalysisDatasetCore>;
     analysisDatasetsOrder: string[];
     commentOid?: string;
@@ -65,7 +66,7 @@ interface ProgrammingCodeCore<DocumentRef> {
 }
 
 // ARM Interfaces for Define-XML 2.0
-export namespace ArmDefine20 {
+export declare namespace ArmDefine20 {
     // Re-export all types and interfaces from Define20 except ARM-specific ones
     export type ItemDef = Define20.ItemDef;
     export type ItemRef = Define20.ItemRef;
@@ -114,7 +115,7 @@ export namespace ArmDefine20 {
     export type MetaDataVersion = Define20.MetaDataVersion & AnalysisResultDisplays;
 }
 // ARM Interfaces for Define-XML 2.1
-export namespace ArmDefine21 {
+export declare namespace ArmDefine21 {
     // Re-export all types and interfaces from Define21 except ARM-specific ones
     export type ItemDef = Define21.ItemDef;
     export type ItemRef = Define21.ItemRef;
