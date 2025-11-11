@@ -1,5 +1,6 @@
 // Main parser function
-export * from "./parser/define";
+import parseDefineXml from "./parser/define";
+export default parseDefineXml;
 
 // Re-export interfaces
 export * from "./interfaces/define.xml.core";

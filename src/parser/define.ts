@@ -8,6 +8,9 @@ interface ParseDefineXml {
     (xmlString: string, defineVer: "2.1", hasArm?: false): Promise<Define21.DefineXml>;
     (xmlString: string, defineVer: "2.0", hasArm?: true): Promise<ArmDefine20.DefineXml>;
     (xmlString: string, defineVer: "2.1", hasArm?: true): Promise<ArmDefine21.DefineXml>;
+    (xmlString: string, defineVer: "2.0" | "2.1", hasArm?: boolean): Promise<
+        Define20.DefineXml | Define21.DefineXml | ArmDefine20.DefineXml | ArmDefine21.DefineXml
+    >;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
