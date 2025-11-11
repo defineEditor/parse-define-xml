@@ -168,3 +168,5 @@ export declare namespace ArmDefine21 {
     >;
     export type MetaDataVersion = Define21.MetaDataVersion & AnalysisResultDisplays;
 }
+
+export type DefineXml = ArmDefine20.DefineXml | ArmDefine21.DefineXml | Define20.DefineXml | Define21.DefineXml;
