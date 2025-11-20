@@ -408,11 +408,17 @@ exports[`Define-XML 2.0 Parser ADaM Snapshots should match valueList VL.ADQSADAS
       "itemOid": "IT.ADQSADAS.AVAL.ACITM01-ACITM14",
       "mandatory": false,
       "methodOid": "MT.ADQSADAS.AVAL.ACITM01-ACITM14",
+      "whereClauseRefs": [
+        "WC.ADQSADAS.AVAL.ACITM01-ACITM14",
+      ],
     },
     "IT.ADQSADAS.AVAL.ACTOT": {
       "itemOid": "IT.ADQSADAS.AVAL.ACTOT",
       "mandatory": false,
       "methodOid": "MT.ADQSADAS.AVAL.ACTOT",
+      "whereClauseRefs": [
+        "WC.ADQSADAS.AVAL.ACTOT",
+      ],
     },
   },
   "itemRefsOrder": [

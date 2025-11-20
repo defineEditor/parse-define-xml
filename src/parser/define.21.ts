@@ -171,7 +171,7 @@ const parseItemRef = (itemRefRaw: any): Define21.ItemRef => {
     if (itemRefRaw["$"]["keySequence"]) {
         itemRef.keySequence = Number(itemRefRaw["$"]["keySequence"]);
     }
-    if (itemRefRaw["$"]["whereClauseRef"]) {
+    if (itemRefRaw["whereClauseRef"]) {
         itemRef.whereClauseRefs = itemRefRaw["whereClauseRef"].map((ref: any) => ref["$"]["whereClauseOid"]);
     }
     if (itemRefRaw["$"]["standardOid"]) {
