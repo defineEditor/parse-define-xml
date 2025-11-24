@@ -119,7 +119,7 @@ const parseAnalysisResult = (
         analysisDatasets: parseAnalysisDatasets(analysisResultRaw["analysisDatasets"]),
     };
     // Remove parameterOid if not present as it is optional
-    if (!analysisResultRaw.parameterOid) {
+    if (!analysisResultRaw["$"]["parameterOid"]) {
         delete commonAttributes.parameterOid;
     }
     if (defineVer === "2.0") {
