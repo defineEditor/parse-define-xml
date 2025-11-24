@@ -134,6 +134,7 @@ Pairwise comparisons among the treatment groups are also presented.",
         ],
       },
       "oid": "AR.Table14.3.01.AR.0000",
+      "parameterOid": "IT.ADADAS.PARAMCD",
       "programmingCode": {
         "code": [
           "proc glm data= adadas;
